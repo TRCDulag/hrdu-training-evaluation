@@ -34,7 +34,7 @@
  */
 
 const TZ = 'Asia/Manila';
-const VERSION = '1.0.1';
+const VERSION = '1.0.2';
 const FORM = { title: 'Training Evaluation Tool (Level 1)' };
 
 const TRAININGS = 'Trainings', RESP = 'Responses', RP = 'Resource Person Ratings', USERS = 'Users', AUDIT = 'Audit Trail';

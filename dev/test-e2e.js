@@ -33,7 +33,7 @@ fs.mkdirSync(shots, { recursive: true });
     await pc.screenshot({ path: path.join(shots, '01-add-training.png') });
     await pc.click('#trSave');
     await pc.waitForSelector('#shDlg[open]');
-    assert.match(await pc.inputValue('#shLink'), /\?t=TE-2026-001$/);
+    assert.match(await pc.inputValue('#shLink'), /^https:\/\/trcdulag\.github\.io\/hrdu-training-evaluation\/#t=TE-2026-001$/);
     await pc.screenshot({ path: path.join(shots, '02-share.png') });
     await pc.click('#shDlg [data-close]');
 

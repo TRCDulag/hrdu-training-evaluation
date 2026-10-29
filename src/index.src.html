@@ -484,6 +484,9 @@
 <script>
 // The /exec link of the Apps Script, so the page also works when opened from a PC or a web host.
 const DEFAULT_URL = "https://script.google.com/macros/s/AKfycbx9K2YMK2jsGjRAGMLriFVDhDN0SJNU8zAjKFRbzcIbp8uVbTbBZZ7DtiZM64lPvlqk/exec";
+// The GitHub Pages copy of this page. The participants' links and QR codes point here (#t=TE-2026-001),
+// which avoids Google's "unable to open the file" error on browsers signed in to several Google accounts.
+const PUBLIC_URL = "https://trcdulag.github.io/hrdu-training-evaluation/";
 // Set by the Apps Script when the link ends in ?t=TE-2026-001 (the participant's form).
 const BOOT_T = /*BOOT*/"";
 
@@ -491,9 +494,10 @@ const HEADER_BLACK = "%%HEADER_BLACK%%";   // the official header for printouts
 const SEAL_DOH = "%%LOGO_DOH_ROUND%%";
 const SEAL_TRC = "%%LOGO_TRC_ROUND%%";
 const WALLPAPER = "%%WALLPAPER%%";
-const APP_VERSION = "1.0.1";
+const APP_VERSION = "1.0.2";
 // The changelog, newest first. Shown under "What's new".
 const CHANGES = [
+  ["1.0.2", "Oct 29, 2026", ["The app also opens from GitHub Pages (trcdulag.github.io/hrdu-training-evaluation). The participants' links and QR codes now point there, so they open even on a browser signed in to several Google accounts."]],
   ["1.0.1", "Oct 29, 2026", ["The top role is now called Administrator, and the first account made with the setup passcode is the Administrator."]],
   ["1.0.0", "Oct 29, 2026", ["First version: the Training Evaluation Tool (Level 1) on the participant's phone, typing in paper forms, the summary per training, the yearly report, and HRDU accounts."]]
 ];
@@ -984,10 +988,7 @@ $("trForm").onsubmit = async e => {
 };
 
 // ---------- share link, QR, poster ----------
-function evalLink(code) {
-  const base = (D.appUrl || gsUrl() || "").replace(/[?#].*$/, "");
-  return base ? base + "?t=" + code : location.href.replace(/[?#].*$/, "") + "#t=" + code;
-}
+function evalLink(code) { return PUBLIC_URL + "#t=" + code; }
 function qrSvg(text) {
   const q = qrcode(0, "M"); q.addData(text); q.make();
   const n = q.getModuleCount(), m = 2; let d = "";

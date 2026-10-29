@@ -1,6 +1,6 @@
 {
   "name": "hrdu-training-evaluation",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "Training Evaluation Tool (Level 1) for the HRDU of DOH TRC Dulag: participant form, paper form encoding, summaries and yearly report",
   "scripts": {

@@ -39,6 +39,8 @@ Only HRDU staff have accounts, each with a role. **Administrator**: everything, 
 
 **After changing the script or the page:** *Deploy > Manage deployments > pencil > Version: New version > Deploy*. The link stays the same.
 
+**GitHub Pages.** The same page is also at https://trcdulag.github.io/hrdu-training-evaluation/ and talks to the /exec link (`DEFAULT_URL` in the page). The participants' links and QR codes point there (`#t=TE-2026-001`), because Google's own link can show "Sorry, unable to open the file" on a browser signed in to more than one Google account. Pages updates by itself when `index.html` changes on `main`. One time: the repo must be public (it holds no real data), then *Settings > Pages*, Source *Deploy from a branch*, Branch *main*, folder */ (root)*, Save.
+
 ## Day to day
 
 - **Before the training:** add the training, then print the QR poster or copy the link for the group chat. Print blank forms for those without a phone.
