@@ -1,0 +1,12 @@
+{
+  "name": "hrdu-training-evaluation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Training Evaluation Tool (Level 1) for the HRDU of DOH TRC Dulag: participant form, paper form encoding, summaries and yearly report",
+  "scripts": {
+    "build": "python3 dev/build.py",
+    "dev": "node dev/server.js",
+    "test": "node dev/test-backend.js",
+    "test:e2e": "node dev/test-e2e.js"
+  }
+}

@@ -1,0 +1,1227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HRDU Training Evaluation</title>
+<meta name="theme-color" content="#1F2A45">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style id="pageSize">@page { size: A4 portrait; margin: 10mm; }</style>
+<style>
+  /* Same look as the other TRC Dulag apps: DOH palette (Deep Navy, Mint Cream, Health Blue), Barlow, navy header. */
+  :root {
+    --navy: #1F2A45; --mint: #EEFAF6; --honeydew: #DEF0E9;
+    --ground: var(--mint); --panel: #ffffff; --ink: #333333; --head: #1F2A45; --muted: #5E6B78; --line: #D5E3DD; --line-2: #E4EDE9; --field: #ffffff;
+    --brand: #0B4BAA; --brand-hover: #093E8E; --brand-ink: #ffffff; --brand-soft: #EAF1FB; --brand-line: #A9C3EA;
+    --ok: #17653F; --warn: #6B5200; --bad: #AD0F0A; --ok-soft: #D9F0E3; --warn-soft: #FFF1B8; --bad-soft: #F8DEDD;
+    --ring: 0 0 0 2px #fff, 0 0 0 5px var(--brand);
+    --r: 12px; --r-ctl: 8px;
+  }
+  * { box-sizing: border-box; }
+  html { accent-color: var(--brand); -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--ground); color: var(--ink); font: 16px/1.45 "Barlow", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+  :focus-visible { outline: none; box-shadow: var(--ring); border-radius: 8px; }
+  .hidden { display: none !important; }
+  .num, td.n, .tile .val { font-variant-numeric: tabular-nums; }
+  h2, h3, h4 { color: var(--head); }
+
+  /* shell */
+  header.bar { position: sticky; top: 0; z-index: 20; background: var(--navy); color: #fff; display: flex; align-items: center; gap: 14px; padding: 8px 18px; min-height: 72px; padding-top: max(8px, env(safe-area-inset-top)); box-shadow: 0 2px 10px rgba(16,24,40,.18); }
+  .seals { display: flex; align-items: center; flex: none; }
+  .seals img { height: 46px; width: 46px; border-radius: 50%; object-fit: contain; }
+  .seals img + img { margin-left: 5px; }
+  .apptitle { flex: 1; min-width: 0; padding-left: 14px; border-left: 1px solid rgba(255,255,255,.22); }
+  .apptitle b { display: block; font-size: 19px; font-weight: 600; line-height: 1.2; }
+  .apptitle span { font-size: 13px; color: rgba(255,255,255,.72); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+  .hbtn { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.06); color: #fff; border: 1px solid rgba(255,255,255,.22); border-radius: 10px; padding: 6px 12px; min-height: 44px; font: inherit; font-size: 14.5px; font-weight: 500; cursor: pointer; }
+  .hbtn:hover { background: rgba(255,255,255,.14); }
+  .hbtn .av { width: 30px; height: 30px; border-radius: 50%; background: #fff; color: var(--navy); font-weight: 700; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; }
+  .hbtn .mt { text-align: left; line-height: 1.15; }
+  .hbtn .mt small { display: block; font-size: 11.5px; color: rgba(255,255,255,.7); }
+  .menu { position: relative; }
+  .menupanel { position: absolute; right: 0; top: calc(100% + 8px); width: 260px; background: #fff; color: var(--ink); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 16px 40px rgba(31,42,69,.22); padding: 6px; z-index: 40; }
+  .menupanel .mh { padding: 10px 12px 8px; font-size: 13px; color: var(--muted); border-bottom: 1px solid var(--line-2); margin-bottom: 4px; }
+  .menupanel .mh b { display: block; color: var(--navy); font-size: 14.5px; }
+  .menupanel button { display: block; width: 100%; text-align: left; background: none; border: 0; border-radius: 8px; padding: 10px 12px; min-height: 44px; font: inherit; font-size: 15px; color: var(--ink); cursor: pointer; }
+  .menupanel button:hover, .menupanel button:focus-visible { background: var(--mint); }
+  .menupanel button.danger { color: var(--bad); }
+  .shell { display: grid; grid-template-columns: 210px minmax(0, 1fr); min-height: calc(100vh - 72px); }
+  nav.tabs { background: #fff; border-right: 1px solid var(--line-2); padding: 14px 12px; display: flex; flex-direction: column; gap: 2px; position: sticky; top: 72px; align-self: start; height: calc(100vh - 72px); }
+  nav.tabs button { display: flex; align-items: center; gap: 12px; background: transparent; color: var(--ink); border: 1px solid transparent; border-radius: 10px; padding: 8px 14px; min-height: 42px; font: inherit; font-size: 15.5px; font-weight: 500; cursor: pointer; text-align: left; }
+  nav.tabs button svg { width: 22px; height: 22px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; color: var(--muted); }
+  nav.tabs button:hover { background: var(--mint); }
+  nav.tabs button[aria-selected="true"] { background: var(--honeydew); color: var(--navy); font-weight: 600; }
+  nav.tabs button[aria-selected="true"] svg { color: var(--navy); }
+  main { width: 100%; max-width: 1180px; padding: 24px 28px 80px; }
+  section.view > h2 { font-size: 26px; font-weight: 600; margin: 0 0 4px; letter-spacing: -.01em; }
+  section.view > .lead { color: var(--muted); margin: 0 0 18px; font-size: 15px; }
+  @media (max-width: 899px) {
+    header.bar { gap: 8px; padding: 8px 10px; min-height: 60px; }
+    .seals img { height: 38px; width: 38px; }
+    .apptitle { padding-left: 8px; } .apptitle b { font-size: 16px; } .apptitle span { display: none; }
+    .hbtn { padding: 6px 8px; } .hbtn .mt { display: none; }
+    .shell { display: block; }
+    nav.tabs { flex-direction: row; height: auto; position: sticky; top: 60px; z-index: 15; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--line-2); padding: 6px 8px; }
+    nav.tabs button { flex: none; padding: 8px 12px; font-size: 14.5px; gap: 8px; }
+    nav.tabs button svg { width: 19px; height: 19px; }
+    main { padding: 16px 16px 80px; }
+    section.view > h2 { font-size: 22px; }
+  }
+
+  /* building blocks */
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; margin-bottom: 16px; }
+  .panel > h3 { margin: 0 0 12px; font-size: 18px; font-weight: 600; }
+  .panel > h3 .sub { font-weight: 400; color: var(--muted); font-size: 14px; margin-left: 6px; }
+  @media (max-width: 640px) { .panel { padding: 16px; } }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px 16px; }
+  .grid .wide { grid-column: 1 / -1; }
+  label.f { display: block; font-size: 14px; font-weight: 600; color: var(--head); }
+  span.req::after { content: " *"; color: var(--bad); }
+  input, select, textarea { width: 100%; margin-top: 5px; font: inherit; font-size: 16px; font-weight: 400; color: var(--ink); background: var(--field); border: 1px solid #C3D3CC; border-radius: var(--r-ctl); padding: 10px 12px; min-height: 46px; }
+  textarea { min-height: 90px; resize: vertical; }
+  input:focus-visible, select:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 3px rgba(11,75,170,.18); border-color: var(--brand); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--brand); color: var(--brand-ink); border: 1px solid var(--brand); border-radius: var(--r-ctl); padding: 10px 18px; min-height: 46px; font: inherit; font-weight: 600; cursor: pointer; text-decoration: none; }
+  .btn:hover { background: var(--brand-hover); }
+  .btn.ghost { background: #fff; color: var(--brand); border-color: var(--line); }
+  .btn.ghost:hover { background: var(--brand-soft); border-color: var(--brand-line); }
+  .btn.danger { background: #fff; color: var(--bad); border-color: #E8C4C2; }
+  .btn.danger:hover { background: var(--bad-soft); }
+  .btn.small { min-height: 38px; padding: 6px 12px; font-size: 14.5px; }
+  .btn[disabled] { opacity: .55; cursor: wait; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .row.end { justify-content: flex-end; }
+  .spacer { flex: 1; }
+  .hint { color: var(--muted); font-size: 14px; margin: 6px 0 0; }
+  .msg { font-size: 15px; margin-top: 8px; min-height: 1px; }
+  .msg.err { color: var(--bad); } .msg.ok { color: var(--ok); }
+  .chip { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--brand-soft); color: var(--brand); white-space: nowrap; }
+  .chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .chip.ok { background: var(--ok-soft); color: var(--ok); }
+  .chip.mute { background: #EEEEEE; color: #666; }
+  .chip.bad { background: var(--bad-soft); color: var(--bad); }
+  .filters { display: grid; grid-template-columns: 2fr minmax(140px, 1fr) minmax(140px, 1fr); gap: 12px; align-items: end; margin-bottom: 14px; }
+  @media (max-width: 700px) { .filters { grid-template-columns: 1fr 1fr; } .filters .q { grid-column: 1 / -1; } }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .tile { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px; }
+  .tile .lb { font-size: 14px; color: var(--muted); font-weight: 600; }
+  .tile .val { font-size: 30px; font-weight: 700; line-height: 1.2; margin-top: 2px; color: var(--navy); }
+  .tile .sm { font-size: 13.5px; color: var(--muted); }
+  @media (max-width: 760px) { .tiles { grid-template-columns: 1fr 1fr; } }
+
+  /* tables */
+  .tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--panel); }
+  table.list { width: 100%; border-collapse: collapse; font-size: 15px; }
+  table.list th { text-align: left; font-size: 13px; font-weight: 600; color: var(--muted); background: #F6FBF9; padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  table.list td { padding: 11px 12px; border-bottom: 1px solid var(--line-2); vertical-align: top; }
+  table.list th.n, table.list td.n { text-align: right; }
+  table.list tbody tr:last-child td { border-bottom: 0; }
+  table.list tbody.click tr { cursor: pointer; }
+  table.list tbody.click tr:hover td { background: var(--mint); }
+  table.list tr.sec td { background: #F6FBF9; font-weight: 600; color: var(--navy); }
+  table.list .s { color: var(--muted); font-size: 13.5px; }
+  table.list tfoot td { padding: 0; border-top: 1px solid var(--line); }
+  .empty { padding: 28px; text-align: center; color: var(--muted); }
+  .addrow { display: flex; align-items: center; gap: 10px; width: 100%; background: #F6FBF9; border: 0; padding: 14px 16px; font: inherit; font-size: 15.5px; font-weight: 600; color: var(--brand); cursor: pointer; text-align: left; }
+  .addrow:hover { background: var(--brand-soft); }
+  .addrow .plus { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid currentColor; display: inline-flex; align-items: center; justify-content: center; font-size: 18px; line-height: 1; }
+  @media (max-width: 760px) { table.list .hide-m { display: none; } }
+  .bars { display: flex; height: 10px; border-radius: 5px; overflow: hidden; background: var(--line-2); min-width: 110px; }
+  .bars i { display: block; height: 100%; }
+  .bars .E { background: #0B4BAA; } .bars .VS { background: #5C8FD6; } .bars .S { background: #A9C3EA; } .bars .P { background: #AD0F0A; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13.5px; color: var(--muted); margin: 8px 0 0; }
+  .legend span { display: inline-flex; gap: 6px; align-items: center; }
+  .legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+  .sugg { margin: 0; padding-left: 22px; } .sugg li { margin: 0 0 6px; }
+
+  /* the evaluation form (participant's phone, and HRDU encoding a paper form) */
+  .evf .sec { margin: 0 0 4px; font-size: 18px; font-weight: 700; color: var(--navy); }
+  .evf .sub { margin: 14px 0 4px; font-size: 15.5px; font-weight: 700; color: var(--navy); }
+  .evf .sub small { font-weight: 400; color: var(--muted); }
+  fieldset.q { border: 0; border-bottom: 1px solid var(--line-2); margin: 0; padding: 12px 0; }
+  fieldset.q:last-child { border-bottom: 0; }
+  fieldset.q legend { float: left; width: 100%; padding: 0; margin: 0 0 8px; font-size: 16px; color: var(--ink); }
+  fieldset.q legend b { color: var(--navy); margin-right: 4px; }
+  fieldset.q.miss legend { color: var(--bad); }
+  fieldset.q.miss .rt label { border-color: #E3A9A6; }
+  .rt { clear: both; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; max-width: 520px; }
+  .rt label { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #C3D3CC; border-radius: var(--r-ctl); background: #fff; min-height: 54px; padding: 4px 2px; cursor: pointer; text-align: center; }
+  .rt input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; min-height: 0; }
+  .rt b { font-size: 17px; color: var(--navy); line-height: 1.1; }
+  .rt small { font-size: 11.5px; color: var(--muted); line-height: 1.1; }
+  .rt label:has(input:focus-visible) { box-shadow: var(--ring); }
+  .rt label:has(input:checked) { background: var(--brand); border-color: var(--brand); }
+  .rt label:has(input:checked) b, .rt label:has(input:checked) small { color: #fff; }
+  .rt label.P:has(input:checked) { background: var(--bad); border-color: var(--bad); }
+  .evf.compact fieldset.q { display: grid; grid-template-columns: 1fr 300px; gap: 10px; align-items: center; padding: 8px 0; }
+  .evf.compact fieldset.q legend { margin: 0; font-size: 15px; }
+  .evf.compact .rt label { min-height: 40px; } .evf.compact .rt small { display: none; }
+  @media (max-width: 700px) { .evf.compact fieldset.q { grid-template-columns: 1fr; } }
+  .rpcard { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-top: 10px; }
+  .rpcard h4 { margin: 0 0 4px; font-size: 16.5px; }
+  .rpcard.off fieldset { display: none; }
+  label.cb { display: flex; gap: 8px; align-items: flex-start; font-size: 15px; padding: 4px 0; cursor: pointer; font-weight: 400; color: var(--ink); }
+  label.cb input { width: 20px; height: 20px; min-height: 0; margin: 2px 0 0; flex: none; }
+  .choice { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+  .choice label { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #C3D3CC; border-radius: var(--r-ctl); padding: 9px 14px; font-size: 15px; font-weight: 400; color: var(--ink); cursor: pointer; background: #fff; min-height: 44px; }
+  .choice input { width: auto; min-height: 0; margin: 0; }
+  .choice label:has(input:checked) { border-color: var(--brand); background: var(--brand-soft); color: var(--navy); font-weight: 600; }
+  .choice.miss label { border-color: #E3A9A6; }
+
+  /* public page: the participant's evaluation form */
+  #pub { min-height: 100vh; min-height: 100dvh; background: var(--navy) center / cover no-repeat fixed; padding: 0 0 32px; }
+  #pub .pubhead { display: flex; align-items: center; gap: 12px; padding: 14px 18px; color: #fff; max-width: 760px; margin: 0 auto; }
+  #pub .pubhead b { display: block; font-size: 18px; } #pub .pubhead span { font-size: 13px; opacity: .8; }
+  #pub .pubwrap { max-width: 760px; margin: 0 auto; padding: 0 12px; display: flex; flex-direction: column; gap: 14px; }
+  #pub .panel { margin: 0; }
+  .trhero h2 { margin: 0 0 4px; font-size: 22px; line-height: 1.25; }
+  .trhero p { margin: 2px 0; color: var(--muted); }
+  .note { background: var(--warn-soft); border: 1px solid #EBD98A; border-radius: var(--r); padding: 12px 16px; font-size: 15px; }
+  .sendbar { position: sticky; bottom: 0; background: #fff; border: 1px solid var(--line); border-radius: var(--r); padding: 12px 16px; display: flex; gap: 12px; align-items: center; box-shadow: 0 -4px 16px rgba(31,42,69,.12); }
+  .sendbar .msg { margin: 0; flex: 1; }
+  .thanks { text-align: center; padding: 34px 20px; }
+  .thanks .tick { width: 64px; height: 64px; border-radius: 50%; background: var(--ok-soft); color: var(--ok); display: inline-flex; align-items: center; justify-content: center; font-size: 34px; font-weight: 700; }
+  .thanks h2 { margin: 12px 0 6px; }
+  .privacy { color: rgba(255,255,255,.85); font-size: 13.5px; max-width: 760px; margin: 4px auto 0; padding: 0 16px; }
+  .privacy b { color: #fff; }
+
+  /* dialogs */
+  dialog { border: 0; border-radius: 16px; padding: 0; width: min(860px, calc(100vw - 24px)); max-height: calc(100vh - 24px); background: #fff; color: var(--ink); box-shadow: 0 20px 60px rgba(31,42,69,.3); }
+  dialog.small { width: min(480px, calc(100vw - 24px)); }
+  dialog::backdrop { background: rgba(31, 42, 69, .5); }
+  dialog .dh { display: flex; align-items: center; gap: 10px; padding: 16px 20px; border-bottom: 1px solid var(--line-2); position: sticky; top: 0; background: #fff; z-index: 1; }
+  dialog .dh h3 { margin: 0; font-size: 19px; font-weight: 600; flex: 1; }
+  dialog .db { padding: 20px; }
+  dialog .df { padding: 12px 20px; border-top: 1px solid var(--line-2); display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; align-items: center; position: sticky; bottom: 0; background: #fff; z-index: 1; }
+  dialog .df .msg { margin: 0; flex: 1; }
+  dl.kv { display: grid; grid-template-columns: max-content 1fr; gap: 7px 16px; margin: 0; font-size: 15px; }
+  dl.kv dt { color: var(--muted); } dl.kv dd { margin: 0; overflow-wrap: anywhere; }
+  .x { background: transparent; border: 0; font-size: 24px; line-height: 1; color: var(--muted); cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+  .x:hover { background: var(--mint); }
+  .share { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+  .share svg { width: 200px; height: 200px; flex: none; }
+  .share .t { flex: 1; min-width: 220px; }
+  .share input { font-size: 14px; }
+  .temp { font-family: ui-monospace, Consolas, monospace; font-size: 20px; font-weight: 700; letter-spacing: .08em; background: var(--warn-soft); color: var(--navy); padding: 4px 10px; border-radius: 8px; }
+  #newBody h4 { margin: 14px 0 4px; font-size: 16px; } #newBody h4:first-child { margin-top: 0; }
+  #newBody h4 small { font-weight: 400; color: var(--muted); margin-left: 6px; }
+  #newBody ul { margin: 0 0 6px; padding-left: 20px; line-height: 1.5; }
+
+  /* sign-in */
+  #lock { min-height: 100vh; min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 24px 16px; background: var(--navy) center / cover no-repeat; }
+  #lock .card { width: min(420px, 100%); background: #fff; border-radius: 18px; box-shadow: 0 24px 64px rgba(0,0,0,.38); overflow: hidden; }
+  #lock .ch { background: var(--navy); color: #fff; padding: 22px 24px 18px; text-align: center; }
+  #lock .ch .seals { justify-content: center; margin-bottom: 10px; }
+  #lock .ch .seals img { width: 54px; height: 54px; }
+  #lock h1 { font-size: 22px; font-weight: 600; margin: 0; color: #fff; }
+  #lock .ch p { margin: 2px 0 0; font-size: 14px; color: rgba(255,255,255,.75); }
+  #lock .cb2 { padding: 22px 24px 8px; }
+  #lock .cb2 h2 { font-size: 17px; margin: 0 0 4px; }
+  #lock .cb2 p.s { color: var(--muted); margin: 0 0 14px; font-size: 14.5px; }
+  #lock label.f + label.f { margin-top: 12px; }
+  #lock .btn.go { width: 100%; min-height: 50px; font-size: 17px; margin-top: 18px; }
+  #lock .alt { border-top: 1px solid var(--line-2); margin-top: 18px; padding: 14px 24px 18px; }
+  #lock .alt .lb { font-size: 14px; color: var(--muted); margin-bottom: 6px; }
+  #lock .alt form { display: flex; gap: 8px; } #lock .alt input { margin: 0; } #lock .alt .btn { flex: none; }
+  #lock .cf { padding: 0 24px 14px; font-size: 13px; color: var(--muted); }
+  #lock .linkbtn { color: var(--brand); font-weight: 600; background: none; border: 0; padding: 0; font: inherit; font-size: 13.5px; cursor: pointer; }
+  /* roles: r1 Viewer, r2 Staff, r3 Head */
+  body.r1 .need2, body.r1 .need3, body.r2 .need3 { display: none !important; }
+
+  /* ---------- printouts ---------- */
+  #printArea { display: none; }
+  .sheet { background: #fff; color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 9pt; line-height: 1.2; }
+  .sheet .hdimg { width: 100%; display: block; margin-bottom: 1mm; }
+  .sheet .rule { border-top: 1.4pt solid #000; border-bottom: .5pt solid #000; height: 1.2mm; margin: 1mm 0 2.5mm; }
+  .sheet h3 { text-align: center; font-size: 12pt; margin: 0 0 2.5mm; }
+  .sheet table { width: 100%; border-collapse: collapse; margin-bottom: 2mm; }
+  .sheet td, .sheet th { border: .6pt solid #000; padding: .8mm 1.4mm; vertical-align: top; }
+  .sheet th { background: #e8e8e8; font-weight: bold; text-align: center; }
+  .sheet td.c, .sheet th.c { text-align: center; }
+  .sheet td.k { font-weight: bold; white-space: nowrap; width: 1%; }
+  .sheet tr.sec td { background: #f2f2f2; font-weight: bold; }
+  .sheet .s2 { padding-left: 5mm; } .sheet .s3 { padding-left: 9mm; }
+  .sheet .cm { width: 9mm; text-align: center; }
+  .sheet .lgd { font-size: 7.5pt; margin: 0 0 2mm; }
+  .sheet h4 { font-size: 10pt; margin: 3mm 0 1.2mm; }
+  .sheet ol { margin: 0 0 2mm 5mm; padding: 0; } .sheet ol li { margin-bottom: .8mm; }
+  .sheet .signs { display: flex; justify-content: space-around; margin-top: 8mm; font-size: 9.5pt; break-inside: avoid; }
+  .sheet .signs div { text-align: center; min-width: 65mm; }
+  .sheet .signs .line { border-bottom: .75pt solid #000; height: 10mm; font-weight: bold; text-transform: uppercase; display: flex; align-items: flex-end; justify-content: center; }
+  .sheet .meta { font-size: 7pt; color: #444; margin-top: 3mm; }
+  .sheet thead { display: table-header-group; }
+  .sheet tr { break-inside: avoid; }
+  /* the blank paper form, laid out like the HRDU form */
+  .paper { font-family: "Times New Roman", Times, serif; font-size: 10.5pt; line-height: 1.15; }
+  .paper .fld { display: grid; grid-template-columns: 1fr 62mm; gap: 1mm 6mm; margin-bottom: 2mm; }
+  .paper .fld div { display: flex; gap: 2mm; align-items: flex-end; } .paper .fld b { white-space: nowrap; }
+  .paper .fld span { flex: 1; border-bottom: .6pt solid #000; min-height: 5mm; font-size: 10pt; padding: 0 1mm; }
+  .paper p { margin: 0 0 1.5mm; }
+  .paper .scale { text-align: center; margin: 1mm 0; }
+  .paper td, .paper th { padding: .4mm 1.4mm; font-weight: normal; }
+  .paper th { background: #fff; }
+  .paper .rpt td { height: 6.5mm; }
+  .paper .circles { display: flex; justify-content: space-around; margin: 2mm 0 1mm; text-align: center; }
+  .paper .circles i { display: block; width: 13mm; height: 9mm; border: .8pt solid #000; border-radius: 50%; margin: 0 auto 1.5mm; }
+  .paper .ln { border-bottom: .6pt solid #000; height: 6.5mm; }
+  .poster { text-align: center; font-family: Arial, Helvetica, sans-serif; color: #000; width: 132mm; margin: 0 auto; }
+  .poster .hdimg { width: 100%; display: block; }
+  .poster h1 { font-size: 22pt; margin: 8mm 0 2mm; color: #1F2A45; }
+  .poster .tt { font-size: 14pt; font-weight: bold; margin: 1mm 0; }
+  .poster p { font-size: 11pt; margin: 1.5mm 0; }
+  .poster svg { width: 90mm; height: 90mm; margin: 6mm auto 3mm; display: block; }
+  .poster .code { font-size: 16pt; font-weight: bold; letter-spacing: .04em; }
+  @media print {
+    body { background: #fff; }
+    body.printing > *:not(#printArea) { display: none !important; }
+    body.printing #printArea { display: block; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ sign in (HRDU staff) ============ -->
+<div id="lock" class="hidden">
+  <div class="card">
+    <div class="ch"><div class="seals"><img class="pDoh" alt="Department of Health"><img class="pTrc" alt="TRC Dulag"></div>
+      <h1>Training Evaluation</h1><p>Human Resource Development Unit, DOH TRC Dulag</p></div>
+    <form class="cb2" id="lockForm" autocomplete="on">
+      <h2>Sign in</h2><p class="s">For HRDU staff. Use your own username and password.</p>
+      <label class="f">Username<input id="uIn" autocomplete="username" autocapitalize="none" spellcheck="false" required></label>
+      <label class="f">Password<input id="pwIn" type="password" autocomplete="current-password" required></label>
+      <label class="f hidden" id="urlWrap" style="margin-top:12px">App link (the Apps Script web app URL ending in /exec)
+        <input id="urlIn" type="url" placeholder="https://script.google.com/macros/s/.../exec"></label>
+      <button class="btn go" id="lockBtn" type="submit">Sign in</button>
+      <div class="msg" id="lockMsg" role="status"></div>
+    </form>
+    <form class="cb2 hidden" id="setupForm" autocomplete="off">
+      <h2>Set up the first account</h2><p class="s">No one has an account yet. The HRDU head makes the first one with the setup passcode, then adds the rest of the staff.</p>
+      <label class="f">Setup passcode<input id="suPin" type="password" inputmode="numeric" required></label>
+      <label class="f">Full name<input id="suName" required></label>
+      <label class="f">Position<input id="suPos" value="Head, HRDU"></label>
+      <label class="f">Username<input id="suUser" autocapitalize="none" spellcheck="false" required placeholder="for example msantos"></label>
+      <label class="f">Password<input id="suPw" type="password" autocomplete="new-password" required></label>
+      <p class="hint">At least 8 characters, with letters and numbers.</p>
+      <button class="btn go" id="suBtn" type="submit">Make my account</button>
+      <div class="msg" id="suMsg" role="status"></div>
+    </form>
+    <form class="cb2 hidden" id="chgForm" autocomplete="off">
+      <h2>Choose your own password</h2><p class="s">You signed in with a temporary password. Please choose your own before going on.</p>
+      <label class="f">New password<input id="chgPw" type="password" autocomplete="new-password" required></label>
+      <label class="f">Type it again<input id="chgPw2" type="password" autocomplete="new-password" required></label>
+      <p class="hint">At least 8 characters, with letters and numbers.</p>
+      <button class="btn go" id="chgBtn" type="submit">Save and continue</button>
+      <div class="msg" id="chgMsg" role="status"></div>
+    </form>
+    <div class="alt" id="lockAlt">
+      <div class="lb">Here to evaluate a training? Type the code HRDU gave you.</div>
+      <form id="codeForm"><input id="codeIn" placeholder="TE-2026-001" autocapitalize="characters" aria-label="Training code"><button class="btn ghost" type="submit">Open</button></form>
+    </div>
+    <div class="cf"><button class="linkbtn" id="lockVer" type="button">v</button></div>
+  </div>
+</div>
+
+<!-- ============ participant's evaluation form (no sign-in) ============ -->
+<div id="pub" class="hidden">
+  <div class="pubhead"><div class="seals"><img class="pDoh" alt="Department of Health"><img class="pTrc" alt="TRC Dulag"></div>
+    <div><b>Training Evaluation Tool (Level 1)</b><span>DOH Treatment and Rehabilitation Center Dulag</span></div></div>
+  <div class="pubwrap" id="pubBody"></div>
+  <p class="privacy"><b>Your answers are anonymous.</b> The form does not ask for your name. HRDU uses the answers only to improve its trainings, under the Data Privacy Act of 2012 (RA 10173).</p>
+</div>
+
+<!-- ============ HRDU app ============ -->
+<div id="app" class="hidden">
+  <header class="bar">
+    <div class="seals"><img class="pDoh" alt=""><img class="pTrc" alt=""></div>
+    <div class="apptitle"><b>Training Evaluation</b><span>Human Resource Development Unit, DOH TRC Dulag</span></div>
+    <span class="hint" id="syncState" style="color:rgba(255,255,255,.7);margin:0"></span>
+    <div class="menu">
+      <button class="hbtn" id="menuBtn" aria-haspopup="true" aria-expanded="false"><span class="av" id="meAv">HR</span><span class="mt"><span id="meName"></span><small id="meRoleS"></small></span></button>
+      <div class="menupanel hidden" id="menuPanel">
+        <div class="mh"><b id="meName2"></b><span id="meRole"></span></div>
+        <button id="mReload">Refresh data</button>
+        <button id="mPw">Change my password</button>
+        <button id="mNew">What's new</button>
+        <button id="mBackup" class="need3">Back up the Sheet now</button>
+        <button id="mOut" class="danger">Sign out</button>
+      </div>
+    </div>
+  </header>
+  <div class="shell">
+    <nav class="tabs">
+      <button data-v="home"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10"/></svg>Trainings</button>
+      <button data-v="rep"><svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>Yearly report</button>
+      <button data-v="acc" class="need3"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>Accounts</button>
+    </nav>
+    <main>
+      <section class="view" id="v-home">
+        <h2>Trainings</h2><p class="lead">Each training has its own evaluation link and QR code. Open one to share it, type in paper forms or print the summary.</p>
+        <div class="tiles" id="homeTiles"></div>
+        <div class="filters"><label class="f q">Search<input id="hQ" type="search" placeholder="Title, venue, resource person or code"></label>
+          <label class="f">Year<select id="hYear"></select></label>
+          <label class="f">Online form<select id="hStatus"><option value="">All</option><option>Open</option><option>Closed</option></select></label></div>
+        <div class="tablewrap"><table class="list"><thead><tr><th>Code</th><th>Title of activity</th><th class="hide-m">Date</th><th class="n">Answers</th><th class="n">Over all</th><th class="hide-m">Online form</th></tr></thead>
+          <tbody class="click" id="hBody"></tbody>
+          <tfoot class="need2"><tr><td colspan="6"><button class="addrow" id="hAdd"><span class="plus">+</span>Add a training</button></td></tr></tfoot></table></div>
+      </section>
+
+      <section class="view hidden" id="v-tr">
+        <p style="margin:0 0 8px"><button class="btn ghost small" data-go="home">Back to trainings</button></p>
+        <h2 id="tTitle"></h2><p class="lead" id="tMeta"></p>
+        <div class="row" style="margin-bottom:16px">
+          <button class="btn" id="tShare">Share link and QR code</button>
+          <button class="btn ghost need2" id="tEnc">Type in a paper form</button>
+          <button class="btn ghost" id="tPrint">Print summary</button>
+          <button class="btn ghost" id="tBlank">Print blank form</button>
+          <button class="btn ghost" id="tCsv">Download (Excel)</button>
+          <button class="btn ghost need2" id="tEdit">Edit</button>
+          <button class="btn ghost need2" id="tOpen"></button>
+        </div>
+        <div class="tiles" id="tTiles"></div>
+        <div id="tSummary"></div>
+        <div class="panel"><h3>Answers <span class="sub">Click one to see it in full.</span></h3>
+          <div class="tablewrap"><table class="list"><thead><tr><th>No.</th><th class="hide-m">Sent</th><th>From</th><th class="hide-m">Gender</th><th class="hide-m">Province</th><th>Over all</th><th>Status</th></tr></thead><tbody class="click" id="tResp"></tbody></table></div></div>
+      </section>
+
+      <section class="view hidden" id="v-rep">
+        <h2>Yearly report</h2><p class="lead">The average rating of every training in the year, for the L&amp;D accomplishment report. Voided answers are not counted.</p>
+        <div class="row" style="margin-bottom:14px"><label class="f" style="min-width:160px">Year<select id="rYear"></select></label><span class="spacer"></span>
+          <button class="btn ghost" id="rPrint">Print</button><button class="btn ghost" id="rCsv">Download (Excel)</button></div>
+        <div class="tablewrap"><table class="list"><thead><tr><th>Code</th><th>Title of activity</th><th class="hide-m">Date</th><th class="n">Answers</th><th class="n">I</th><th class="n">II.A</th><th class="n">II.B</th><th class="n">II.C</th><th class="n">Over all</th><th>Rating</th></tr></thead><tbody class="click" id="rBody"></tbody></table></div>
+        <p class="hint">I Preparation, II.A Content and Delivery, II.B Training Venue, II.C Resource Persons, Over all (part III). E = 4, VS = 3, S = 2, P = 1.</p>
+      </section>
+
+      <section class="view hidden" id="v-acc">
+        <h2>Accounts</h2><p class="lead">Only HRDU staff have accounts. Head: everything, with accounts, voiding and backups. Staff: add trainings, share links and type in paper forms. Viewer: look and print only.</p>
+        <div class="tablewrap"><table class="list"><thead><tr><th>Name</th><th>Username</th><th>Role</th><th class="hide-m">Last sign-in</th><th>Status</th></tr></thead><tbody class="click" id="aBody"></tbody>
+          <tfoot><tr><td colspan="5"><button class="addrow" id="aAdd"><span class="plus">+</span>Add an account</button></td></tr></tfoot></table></div>
+        <p class="hint" id="aBackup"></p>
+      </section>
+    </main>
+  </div>
+</div>
+
+<!-- training editor -->
+<dialog id="trDlg"><form id="trForm" method="dialog">
+  <div class="dh"><h3 id="trH">Add a training</h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
+  <div class="db"><div class="grid">
+    <label class="f wide"><span class="req">Title of activity</span><input id="trTitle" required maxlength="300"></label>
+    <label class="f"><span class="req">Date from</span><input id="trFrom" type="date" required></label>
+    <label class="f">Date to<input id="trTo" type="date"></label>
+    <label class="f wide">Venue<input id="trVenue" maxlength="200"></label>
+    <label class="f">Conducted by<input id="trBy" maxlength="200" placeholder="HRDU, or the office or agency"></label>
+    <label class="f">Expected participants<input id="trExp" type="number" min="0" inputmode="numeric"></label>
+    <label class="f wide">Resource persons / facilitators<textarea id="trRp" placeholder="One name per line"></textarea>
+      <span class="hint" style="display:block;font-weight:400">Participants rate each one in part II.C.</span></label>
+    <div class="wide"><label class="f">Training venue items to leave out</label>
+      <p class="hint" style="margin-top:2px">Tick what this training did not have, for example accommodation for an in-house training. Those items are not asked.</p>
+      <div class="choice" id="trSkip"></div></div>
+    <label class="f wide">Remarks<input id="trRem" maxlength="500"></label>
+  </div></div>
+  <div class="df"><span class="msg" id="trMsg" role="status"></span><button class="btn ghost" type="button" data-close>Cancel</button><button class="btn" id="trSave" type="submit">Save</button></div>
+</form></dialog>
+
+<!-- share link -->
+<dialog id="shDlg">
+  <div class="dh"><h3>Share the evaluation</h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
+  <div class="db"><div class="share"><div id="shQr"></div><div class="t">
+    <p style="margin-top:0">Show this QR code on the screen at the end of the training, or send the link to the participants' group chat. They answer on their phone. No account is needed.</p>
+    <label class="f">Link<input id="shLink" readonly></label>
+    <p class="hint">Training code <b id="shCode"></b>. Participants can also type it on the sign-in page.</p>
+    <div class="row" style="margin-top:10px"><button class="btn small" id="shCopy">Copy link</button><button class="btn ghost small" id="shPoster">Print QR poster (A5)</button><button class="btn ghost small" id="shOpen">Open the form</button></div>
+    <p class="msg" id="shMsg"></p></div></div></div>
+</dialog>
+
+<!-- type in a paper form -->
+<dialog id="encDlg"><form id="encForm" method="dialog">
+  <div class="dh"><h3>Type in a paper form</h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
+  <div class="db"><p class="hint" style="margin-top:0" id="encLead"></p><div id="encBody"></div></div>
+  <div class="df"><span class="msg" id="encMsg" role="status"></span><button class="btn ghost" type="button" data-close>Done</button><button class="btn" id="encSave" type="submit">Save this form</button></div>
+</form></dialog>
+
+<!-- one response -->
+<dialog id="rsDlg">
+  <div class="dh"><h3 id="rsH"></h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
+  <div class="db" id="rsBody"></div>
+  <div class="df"><span class="msg" id="rsMsg" role="status"></span><button class="btn danger need3" id="rsVoid">Void this answer</button><button class="btn ghost" type="button" data-close>Close</button></div>
+</dialog>
+
+<!-- account -->
+<dialog id="usDlg" class="small"><form id="usForm" method="dialog">
+  <div class="dh"><h3 id="usH">Add an account</h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
+  <div class="db"><div class="grid" style="grid-template-columns:1fr">
+    <label class="f"><span class="req">Full name</span><input id="usName" required></label>
+    <label class="f">Position<input id="usPos"></label>
+    <label class="f"><span class="req">Username</span><input id="usUser" autocapitalize="none" spellcheck="false" required></label>
+    <label class="f">Role<select id="usRole"><option>Staff</option><option>Viewer</option><option>Head</option></select></label>
+    <label class="f" id="usStWrap">Status<select id="usStatus"><option>Active</option><option>Disabled</option></select></label>
+    <label class="cb" id="usResetWrap"><input type="checkbox" id="usReset">Reset the password (a new temporary password is shown once)</label>
+    <div id="usTemp" class="hidden"></div>
+  </div></div>
+  <div class="df"><span class="msg" id="usMsg" role="status"></span><button class="btn ghost" type="button" data-close>Close</button><button class="btn" id="usSave" type="submit">Save</button></div>
+</form></dialog>
+
+<!-- change password -->
+<dialog id="pwDlg" class="small"><form id="pwForm" method="dialog">
+  <div class="dh"><h3>Change my password</h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
+  <div class="db"><label class="f">Current password<input id="pwOld" type="password" autocomplete="current-password" required></label>
+    <label class="f" style="margin-top:12px">New password<input id="pwNew" type="password" autocomplete="new-password" required></label>
+    <label class="f" style="margin-top:12px">Type it again<input id="pwNew2" type="password" autocomplete="new-password" required></label>
+    <p class="hint">At least 8 characters, with letters and numbers.</p></div>
+  <div class="df"><span class="msg" id="pwMsg" role="status"></span><button class="btn ghost" type="button" data-close>Cancel</button><button class="btn" id="pwSave" type="submit">Save</button></div>
+</form></dialog>
+
+<dialog id="newDlg" class="small">
+  <div class="dh"><h3>What's new</h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
+  <div class="db" id="newBody"></div>
+</dialog>
+
+<div id="printArea"></div>
+
+<script>%%QRCODE_LIB%%</script>
+<script>
+// The /exec link of the Apps Script, so the page also works when opened from a PC or a web host.
+const DEFAULT_URL = "";
+// Set by the Apps Script when the link ends in ?t=TE-2026-001 (the participant's form).
+const BOOT_T = /*BOOT*/"";
+
+const HEADER_BLACK = "%%HEADER_BLACK%%";   // the official header for printouts
+const SEAL_DOH = "%%LOGO_DOH_ROUND%%";
+const SEAL_TRC = "%%LOGO_TRC_ROUND%%";
+const WALLPAPER = "%%WALLPAPER%%";
+const APP_VERSION = "1.0.0";
+// The changelog, newest first. Shown under "What's new".
+const CHANGES = [
+  ["1.0.0", "Oct 29, 2026", ["First version: the Training Evaluation Tool (Level 1) on the participant's phone, typing in paper forms, the summary per training, the yearly report, and HRDU accounts."]]
+];
+
+const $ = id => document.getElementById(id);
+const GAS = typeof google !== "undefined" && google.script && google.script.run;   // opened through the /exec link
+const store = {
+  get(k) { try { return localStorage.getItem("hrdu." + k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem("hrdu." + k, v); } catch (e) {} }
+};
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const device = () => navigator.userAgent.replace(/\s+/g, " ").slice(0, 180);
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const MONTHS_LONG = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const WORD = { E: "Excellent", VS: "Very Satisfactory", S: "Satisfactory", P: "Poor" };
+const POINTS = { E: 4, VS: 3, S: 2, P: 1 };
+const RANK = { Viewer: 1, Staff: 2, Head: 3 };
+
+let TOKEN = store.get("token") || "";
+let ME = null;
+const can = role => !!ME && RANK[ME.role] >= RANK[role];
+let D = { trainings: [], responses: [], form: null, today: "", appUrl: "", backup: {} };
+let CUR = "";   // the training open in the detail view
+
+document.querySelectorAll(".pDoh").forEach(i => i.src = SEAL_DOH);
+document.querySelectorAll(".pTrc").forEach(i => i.src = SEAL_TRC);
+$("lock").style.backgroundImage = $("pub").style.backgroundImage = "linear-gradient(rgba(31,42,69,.55), rgba(31,42,69,.75)), url(" + WALLPAPER + ")";
+$("lockVer").textContent = "Version " + APP_VERSION + ", what's new";
+
+// ---------- connection ----------
+function gsUrl() { return (store.get("gsUrl") || DEFAULT_URL).trim(); }
+function api(req) {
+  req = Object.assign({ token: TOKEN, device: device() }, req);
+  const p = GAS ? new Promise((ok, no) =>
+    google.script.run.withSuccessHandler(t => ok(JSON.parse(t))).withFailureHandler(e => no(e)).api(JSON.stringify(req)))
+    : !gsUrl() ? Promise.reject(new Error("nourl"))
+    : fetch(gsUrl(), { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(req) }).then(r => r.json());
+  return p.then(j => { if (j && j.signIn && TOKEN && !$("app").classList.contains("hidden")) signedOut(j.error); return j; });
+}
+function errText(e) {
+  if (e && e.message === "nourl") return "Put in the app link first.";
+  return "Could not reach the Google Sheet. Check the internet connection and try again.";
+}
+function msg(id, t, cls) { const el = $(id); el.textContent = t || ""; el.className = "msg" + (cls ? " " + cls : ""); }
+
+// ---------- dates and numbers ----------
+function parse(s) { const m = String(s || "").match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; }
+function isoDate(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+// "November 3-4, 2026", "October 30 - November 2, 2026", "November 3, 2026"
+function dateRange(a, b) {
+  const x = parse(a), y = parse(b) || x;
+  if (!x) return "";
+  const M = d => MONTHS_LONG[d.getMonth()];
+  if (+x === +y) return M(x) + " " + x.getDate() + ", " + x.getFullYear();
+  if (x.getFullYear() !== y.getFullYear()) return M(x) + " " + x.getDate() + ", " + x.getFullYear() + " - " + M(y) + " " + y.getDate() + ", " + y.getFullYear();
+  if (x.getMonth() !== y.getMonth()) return M(x) + " " + x.getDate() + " - " + M(y) + " " + y.getDate() + ", " + y.getFullYear();
+  return M(x) + " " + x.getDate() + "-" + y.getDate() + ", " + x.getFullYear();
+}
+const f2 = n => n == null || isNaN(n) ? "" : n.toFixed(2);
+// Adjectival rating of an average on the 4-point scale.
+function wordOf(m) { return m == null || isNaN(m) ? "" : m >= 3.5 ? "Excellent" : m >= 2.5 ? "Very Satisfactory" : m >= 1.5 ? "Satisfactory" : "Poor"; }
+const units = (n, w) => n + " " + (n === 1 ? w[0] : w[1]);
+
+// ---------- start: participant's form, or the HRDU sign-in ----------
+function codeOf(t) {
+  const m = String(t || "").toUpperCase().match(/TE[\s-]*(\d{4})[\s-]*0*(\d{1,4})\b/);
+  return m ? "TE-" + m[1] + "-" + m[2].padStart(3, "0") : "";
+}
+function route() {
+  const h = decodeURIComponent((location.hash || "").replace(/^#/, ""));
+  const t = codeOf(BOOT_T) || codeOf((h.match(/(?:^|&)t=([^&]+)/) || [])[1]);
+  if (t) return showEval(t);
+  showLock();
+}
+
+// ======================================================================
+//  Participant's evaluation form
+// ======================================================================
+let EV = null;   // { training, form }
+async function showEval(code) {
+  $("lock").classList.add("hidden"); $("app").classList.add("hidden"); $("pub").classList.remove("hidden");
+  $("pubBody").innerHTML = `<div class="panel">Opening the evaluation form…</div>`;
+  if (!GAS && !gsUrl()) { $("pubBody").innerHTML = `<div class="panel">This page is not linked to the Google Sheet yet. Please use the link or QR code from HRDU.</div>`; return; }
+  try {
+    const j = await api({ action: "evalInfo", code });
+    if (!j.ok) { $("pubBody").innerHTML = `<div class="panel"><p style="margin:0">${esc(j.error)}</p></div>`; return; }
+    EV = j; renderEval();
+  } catch (e) { $("pubBody").innerHTML = `<div class="panel"><p style="margin:0">${esc(errText(e))}</p><p><button class="btn" onclick="showEval('${esc(code)}')">Try again</button></p></div>`; }
+}
+function renderEval() {
+  const t = EV.training;
+  const done = store.get("done." + t.code);
+  if (t.status !== "Open") {
+    $("pubBody").innerHTML = trHero(t) + `<div class="panel"><p style="margin:0">The evaluation for this training is closed. If you still need to answer, please ask HRDU for a paper form.</p></div>`;
+    return;
+  }
+  $("pubBody").innerHTML = trHero(t) +
+    (done ? `<div class="note">This phone already sent an evaluation for this training on ${esc(done)}. If you are another participant using the same phone, go ahead and answer below.</div>` : "") +
+    `<form id="evForm" novalidate><div class="panel evf" id="evBody">${formHtml(EV.form, t, "ev", false)}</div>
+     <div class="sendbar"><span class="msg" id="evMsg" role="status"></span><button class="btn" id="evSend" type="submit">Send my evaluation</button></div></form>`;
+  wireForm($("evBody"));
+  $("evForm").onsubmit = sendEval;
+  updateCount();
+  $("evBody").addEventListener("change", updateCount);
+}
+function trHero(t) {
+  return `<div class="panel trhero"><h2>${esc(t.title)}</h2><p>${esc(dateRange(t.dateFrom, t.dateTo))}${t.venue ? ", " + esc(t.venue) : ""}</p>
+    ${t.conductedBy ? `<p>Conducted by ${esc(t.conductedBy)}</p>` : ""}</div>`;
+}
+function updateCount() {
+  const qs = [...$("evBody").querySelectorAll("fieldset.q")].filter(f => !f.closest(".rpcard.off"));
+  const n = qs.filter(f => f.querySelector("input:checked")).length;
+  if (!$("evMsg").classList.contains("err")) msg("evMsg", n + " of " + qs.length + " answered");
+}
+async function sendEval(e) {
+  e.preventDefault();
+  const a = readForm($("evBody"), EV.form);
+  const miss = checkForm($("evBody"));
+  if (miss) { msg("evMsg", miss.text, "err"); miss.el.scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+  $("evSend").disabled = true; msg("evMsg", "Sending…");
+  try {
+    const j = await api({ action: "submitEval", code: EV.training.code, answers: a });
+    if (!j.ok) { msg("evMsg", j.error, "err"); return; }
+    const now = new Date();
+    store.set("done." + EV.training.code, MONTHS[now.getMonth()] + " " + now.getDate() + ", " + now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }));
+    $("pubBody").innerHTML = trHero(EV.training) + `<div class="panel thanks"><div class="tick">✓</div><h2>Thank you!</h2>
+      <p>Your evaluation was sent. HRDU reads every answer and uses it to plan the next trainings.</p>
+      <p class="hint">Reference: ${esc(j.no)}</p>
+      <p><button class="btn ghost" id="evAgain">Answer for another participant on this phone</button></p></div>`;
+    $("evAgain").onclick = () => { renderEval(); window.scrollTo(0, 0); };
+    window.scrollTo(0, 0);
+  } catch (err) { msg("evMsg", errText(err), "err"); }
+  finally { const b = $("evSend"); if (b) b.disabled = false; }
+}
+
+// ---------- the form itself (shared by the phone and the paper-form encoder) ----------
+function rateHtml(name, compact) {
+  return `<div class="rt">${["E", "VS", "S", "P"].map(k => `<label class="${k}"><input type="radio" name="${esc(name)}" value="${k}"><b>${k}</b><small>${compact ? "" : WORD[k]}</small></label>`).join("")}</div>`;
+}
+function q(name, label, compact) {
+  return `<fieldset class="q" data-name="${esc(name)}"><legend>${label}</legend>${rateHtml(name, compact)}</fieldset>`;
+}
+function formHtml(F, t, p, compact) {
+  const items = sec => F.items.filter(it => it.sec === sec && !(t.skip || []).includes(it.id));
+  const prov = `<datalist id="${p}Prov">${F.provinces.map(x => `<option>${esc(x)}</option>`).join("")}</datalist>`;
+  let h = (compact ? "" : `<p style="margin-top:0">We are interested in your assessment of the training provided and would like to ask you to complete the form. For each statement, tap the rating that matches your answer: <b>E</b> Excellent, <b>VS</b> Very Satisfactory, <b>S</b> Satisfactory, <b>P</b> Poor.</p>`) +
+    `<div class="grid" style="margin-bottom:6px"><label class="f"><span class="${compact ? "" : "req"}">Province</span><input name="${p}province" list="${p}Prov" maxlength="80" autocomplete="off">${prov}</label>
+     <div><span class="f" style="font-size:14px;font-weight:600;color:var(--head)"><span class="${compact ? "" : "req"}">Gender</span></span>
+       <div class="choice" data-name="${p}gender">${F.genders.map(g => `<label><input type="radio" name="${p}gender" value="${esc(g)}">${esc(g)}</label>`).join("")}</div></div></div>`;
+  h += `<div class="sub" style="margin-top:18px">I. ${esc(F.sections["I"].toUpperCase())}</div>` + items("I").map(it => q(p + it.id, `<b>${it.no}.</b>${esc(it.text)}`, compact)).join("");
+  h += `<div class="sub" style="margin-top:18px">II. DURING THE ACTIVITY</div>`;
+  h += `<div class="sub">A. ${esc(F.sections["II.A"])}</div>` + items("II.A").map(it => q(p + it.id, `<b>${it.no}.</b>${esc(it.text)}`, compact)).join("");
+  const v = items("II.B");
+  if (v.length) h += `<div class="sub">B. Training Venue <small>(refer to the standard requirement for training venue)</small></div>` + v.map(it => q(p + it.id, `<b>${it.no}.</b>${esc(it.text)}`, compact)).join("");
+  if ((t.speakers || []).length) {
+    h += `<div class="sub">C. Resource Person/Facilitators</div><p class="hint" style="margin:0 0 4px">Rate each resource person. If you did not attend someone's session, tick the box under the name.</p>` +
+      t.speakers.map((s, i) => `<div class="rpcard" data-rp="${i}"><h4>${esc(s)}</h4>
+        <label class="cb"><input type="checkbox" class="rpskip">I did not attend this session${compact ? " (or this part is blank)" : ""}</label>
+        ${F.rp.map(c => q(p + "rp" + i + c.id, esc(c.text), compact)).join("")}</div>`).join("");
+  }
+  h += `<div class="sub" style="margin-top:18px">III. OVER ALL</div>` + q(p + "overall", "Over all, I consider this training to be", compact);
+  h += `<label class="f" style="margin-top:14px">Suggestions / Recommendations to improve future trainings<textarea name="${p}sugg" maxlength="1500"></textarea></label>`;
+  return `<div class="evf${compact ? " compact" : ""}" data-p="${p}">${h}</div>`;
+}
+function wireForm(root) {
+  root.querySelectorAll(".rpskip").forEach(cb => cb.onchange = () => {
+    const card = cb.closest(".rpcard"); card.classList.toggle("off", cb.checked);
+    if (cb.checked) card.querySelectorAll("input[type=radio]").forEach(r => r.checked = false);
+  });
+  root.addEventListener("change", e => { const f = e.target.closest("fieldset.q, .choice"); if (f) f.classList.remove("miss"); });
+}
+function readForm(root, F) {
+  const p = root.querySelector(".evf").dataset.p;
+  const val = n => { const x = root.querySelector(`input[name="${p + n}"]:checked`); return x ? x.value : ""; };
+  const ratings = {}; F.items.forEach(it => { const v = val(it.id); if (v) ratings[it.id] = v; });
+  const rp = [...root.querySelectorAll(".rpcard")].map(card => {
+    const i = card.dataset.rp, r = {};
+    F.rp.forEach(c => { const v = val("rp" + i + c.id); if (v) r[c.id] = v; });
+    return { name: card.querySelector("h4").textContent, skip: card.querySelector(".rpskip").checked, ratings: r };
+  });
+  return { province: root.querySelector(`input[name="${p}province"]`).value.trim(), gender: val("gender"), ratings, rp,
+    overall: val("overall"), suggestions: root.querySelector(`textarea[name="${p}sugg"]`).value.trim() };
+}
+// The first thing left blank on the participant's form, marked in red.
+function checkForm(root) {
+  const p = root.querySelector(".evf").dataset.p;
+  root.querySelectorAll(".miss").forEach(x => x.classList.remove("miss"));
+  const prov = root.querySelector(`input[name="${p}province"]`);
+  const gender = root.querySelector(".choice");
+  const missing = [...root.querySelectorAll("fieldset.q")].filter(f => !f.closest(".rpcard.off") && !f.querySelector("input:checked"));
+  missing.forEach(f => f.classList.add("miss"));
+  if (!gender.querySelector("input:checked")) gender.classList.add("miss");
+  if (!prov.value.trim()) return { el: prov, text: "Please type your province." };
+  if (!gender.querySelector("input:checked")) return { el: gender, text: "Please pick your gender." };
+  if (missing.length) return { el: missing[0], text: units(missing.length, ["statement still needs", "statements still need"]) + " a rating. They are marked in red." };
+  return null;
+}
+
+// ======================================================================
+//  HRDU sign-in
+// ======================================================================
+let lockStarted = false;
+async function showLock() {
+  $("pub").classList.add("hidden");
+  if (!$("app").classList.contains("hidden")) return;
+  $("lock").classList.remove("hidden");
+  if (lockStarted) return; lockStarted = true;
+  $("urlWrap").classList.toggle("hidden", !!(GAS || DEFAULT_URL));
+  $("urlIn").value = store.get("gsUrl") || "";
+  $("uIn").value = store.get("user") || "";
+  lockPane("sign");
+  if (TOKEN) { try { await startApp(); } catch (e) { msg("lockMsg", errText(e), "err"); } return; }
+  checkSetup();
+}
+function lockPane(which) {
+  ["lockForm", "setupForm", "chgForm"].forEach(id => $(id).classList.add("hidden"));
+  $({ sign: "lockForm", setup: "setupForm", chg: "chgForm" }[which]).classList.remove("hidden");
+  $("lockAlt").classList.toggle("hidden", which !== "sign");
+  const f = { sign: $("uIn").value ? "pwIn" : "uIn", setup: "suPin", chg: "chgPw" }[which];
+  setTimeout(() => $(f).focus(), 30);
+}
+async function checkSetup() {
+  if (!GAS && !gsUrl()) return;
+  try { const j = await api({ action: "publicInit" }); if (j.ok && j.needsSetup) lockPane("setup"); } catch (e) {}
+}
+$("lockForm").onsubmit = async e => {
+  e.preventDefault();
+  if (!GAS && !DEFAULT_URL) { store.set("gsUrl", $("urlIn").value.trim()); if (!gsUrl()) { msg("lockMsg", "Put in the app link first.", "err"); return; } if (await checkSetupNow()) return; }
+  $("lockBtn").disabled = true; msg("lockMsg", "Signing in…");
+  try {
+    const j = await api({ action: "signIn", username: $("uIn").value, password: $("pwIn").value });
+    if (!j.ok) { msg("lockMsg", j.error, "err"); return; }
+    store.set("user", $("uIn").value.trim()); TOKEN = j.token; store.set("token", TOKEN); ME = j.me;
+    if (j.me.mustChange) { lockPane("chg"); msg("lockMsg", ""); return; }
+    await startApp();
+  } catch (err) { msg("lockMsg", errText(err), "err"); }
+  finally { $("lockBtn").disabled = false; }
+};
+async function checkSetupNow() {
+  try { const j = await api({ action: "publicInit" }); if (j.ok && j.needsSetup) { lockPane("setup"); return true; } } catch (e) {}
+  return false;
+}
+$("setupForm").onsubmit = async e => {
+  e.preventDefault();
+  $("suBtn").disabled = true; msg("suMsg", "Saving…");
+  try {
+    const j = await api({ action: "firstHead", pin: $("suPin").value, user: { fullName: $("suName").value, position: $("suPos").value, username: $("suUser").value, password: $("suPw").value } });
+    if (!j.ok) { msg("suMsg", j.error, "err"); return; }
+    store.set("user", $("suUser").value.trim().toLowerCase()); TOKEN = j.token; store.set("token", TOKEN); ME = j.me;
+    await startApp();
+  } catch (err) { msg("suMsg", errText(err), "err"); }
+  finally { $("suBtn").disabled = false; }
+};
+$("chgForm").onsubmit = async e => {
+  e.preventDefault();
+  if ($("chgPw").value !== $("chgPw2").value) { msg("chgMsg", "The two passwords are not the same.", "err"); return; }
+  $("chgBtn").disabled = true; msg("chgMsg", "Saving…");
+  try {
+    const j = await api({ action: "changePassword", old: $("pwIn").value, password: $("chgPw").value });
+    if (!j.ok) { msg("chgMsg", j.error, "err"); return; }
+    ME = j.me; $("pwIn").value = ""; await startApp();
+  } catch (err) { msg("chgMsg", errText(err), "err"); }
+  finally { $("chgBtn").disabled = false; }
+};
+$("codeForm").onsubmit = e => {
+  e.preventDefault();
+  if (!GAS && !DEFAULT_URL && $("urlIn").value.trim()) store.set("gsUrl", $("urlIn").value.trim());
+  const c = codeOf($("codeIn").value);
+  if (!c) { $("codeIn").focus(); $("codeIn").setCustomValidity("Codes look like TE-2026-001."); $("codeIn").reportValidity(); return; }
+  showEval(c);
+};
+$("codeIn").oninput = () => $("codeIn").setCustomValidity("");
+$("lockVer").onclick = showNew;
+async function startApp() {
+  msg("lockMsg", "Opening…");
+  const j = await api({ action: "load" });
+  if (!j.ok) { if (j.signIn) { TOKEN = ""; store.set("token", ""); lockPane("sign"); } msg("lockMsg", j.error, "err"); return; }
+  msg("lockMsg", "");
+  openApp(j);
+}
+function signedOut(why) {
+  TOKEN = ""; store.set("token", ""); ME = null;
+  document.querySelectorAll("dialog[open]").forEach(d => d.close());
+  $("app").classList.add("hidden"); lockStarted = false; showLock(); msg("lockMsg", why || "Please sign in again.", "err");
+}
+
+// ======================================================================
+//  HRDU app
+// ======================================================================
+const VIEWS = ["home", "tr", "rep", "acc"];
+function openApp(j) {
+  take(j);
+  setMe(j.me || ME);
+  $("lock").classList.add("hidden"); $("pub").classList.add("hidden"); $("app").classList.remove("hidden");
+  fillYears();
+  renderAll();
+  show("home");
+}
+function take(j) {
+  D = { trainings: j.trainings || [], responses: j.responses || [], form: j.form, today: j.today || isoDate(new Date()), appUrl: j.appUrl || "", backup: j.backup || {}, version: j.version };
+  $("syncState").textContent = "Updated " + new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+}
+function setMe(me) {
+  ME = me;
+  document.body.classList.remove("r1", "r2", "r3"); document.body.classList.add("r" + (RANK[me.role] || 1));
+  $("meAv").textContent = me.name.split(/\s+/).filter(w => /^[A-Za-z]/.test(w) && !/^[A-Z]\.?$/.test(w)).map(w => w[0]).join("").slice(0, 2).toUpperCase() || "HR";
+  $("meName").textContent = me.name.split(/\s+/)[0]; $("meRoleS").textContent = me.role;
+  $("meName2").textContent = me.name; $("meRole").textContent = me.role + (me.position ? ", " + me.position : "");
+}
+async function reload() {
+  $("syncState").textContent = "Refreshing…";
+  try { const j = await api({ action: "load" }); if (j.ok) { take(j); renderAll(); } else $("syncState").textContent = j.error; }
+  catch (e) { $("syncState").textContent = "Offline, showing the last data"; }
+}
+function renderAll() { renderHome(); if (CUR) renderTraining(); renderRep(); }
+
+// menu
+function menuOpen(on) { $("menuPanel").classList.toggle("hidden", !on); $("menuBtn").setAttribute("aria-expanded", on ? "true" : "false"); }
+$("menuBtn").onclick = e => { e.stopPropagation(); menuOpen($("menuPanel").classList.contains("hidden")); };
+document.addEventListener("click", e => { if (!e.target.closest(".menu")) menuOpen(false); });
+$("mReload").onclick = () => { menuOpen(false); reload(); };
+$("mNew").onclick = () => { menuOpen(false); showNew(); };
+$("mOut").onclick = async () => { menuOpen(false); try { await api({ action: "signOut" }); } catch (e) {} store.set("token", ""); TOKEN = ""; location.hash = ""; location.reload(); };
+$("mPw").onclick = () => { menuOpen(false); ["pwOld", "pwNew", "pwNew2"].forEach(id => $(id).value = ""); msg("pwMsg", ""); $("pwDlg").showModal(); $("pwOld").focus(); };
+$("mBackup").onclick = async () => {
+  menuOpen(false); $("syncState").textContent = "Backing up…";
+  try { const j = await api({ action: "backupNow" }); $("syncState").textContent = j.ok ? "Backed up" : j.error; if (j.ok) { D.backup = { last: j.last, url: j.url }; renderBackup(); } }
+  catch (e) { $("syncState").textContent = errText(e); }
+};
+$("pwForm").onsubmit = async e => {
+  e.preventDefault();
+  if ($("pwNew").value !== $("pwNew2").value) { msg("pwMsg", "The two new passwords are not the same.", "err"); return; }
+  $("pwSave").disabled = true; msg("pwMsg", "Saving…");
+  try {
+    const j = await api({ action: "changePassword", old: $("pwOld").value, password: $("pwNew").value });
+    if (!j.ok) { msg("pwMsg", j.error, "err"); return; }
+    msg("pwMsg", "Your password was changed.", "ok"); setTimeout(() => $("pwDlg").close(), 900);
+  } catch (err) { msg("pwMsg", errText(err), "err"); }
+  finally { $("pwSave").disabled = false; }
+};
+function showNew() {
+  $("newBody").innerHTML = CHANGES.map(c => `<h4>Version ${esc(c[0])}<small>${esc(c[1])}</small></h4><ul>${c[2].map(x => `<li>${esc(x)}</li>`).join("")}</ul>`).join("");
+  $("newDlg").showModal();
+}
+document.querySelectorAll("[data-close]").forEach(b => b.onclick = () => b.closest("dialog").close());
+
+function show(v) {
+  document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.v === v || (v === "tr" && b.dataset.v === "home") ? "true" : "false"));
+  document.querySelectorAll("section.view").forEach(s => s.classList.toggle("hidden", s.id !== "v-" + v));
+  if (v === "acc") loadUsers();
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll("nav.tabs button").forEach(b => b.onclick = () => show(b.dataset.v));
+document.querySelectorAll("[data-go]").forEach(b => b.onclick = () => show(b.dataset.go));
+
+// ---------- summaries ----------
+const byCode = c => D.trainings.find(t => t.code === c);
+const validOf = c => D.responses.filter(r => r.code === c && r.status !== "Voided");
+function tally(vals) {
+  const c = { E: 0, VS: 0, S: 0, P: 0 }; let sum = 0, n = 0;
+  vals.forEach(v => { if (POINTS[v]) { c[v]++; sum += POINTS[v]; n++; } });
+  return { counts: c, n, sum, mean: n ? sum / n : null };
+}
+function merge(ts) { const sum = ts.reduce((a, t) => a + t.sum, 0), n = ts.reduce((a, t) => a + t.n, 0); return { sum, n, mean: n ? sum / n : null }; }
+function summarize(t) {
+  const F = D.form, rs = validOf(t.code);
+  const items = F.items.map((it, i) => Object.assign({}, it, { skip: t.skip.includes(it.id) }, tally(rs.map(r => r.ratings[i]))));
+  const sec = s => merge(items.filter(it => it.sec === s && !it.skip));
+  const rp = t.speakers.map(name => {
+    const rows = rs.map(r => r.rp.find(x => x.name === name)).filter(Boolean);
+    const crit = F.rp.map((c, k) => tally(rows.map(x => x.ratings[k])));
+    return { name, n: rows.length, crit, all: merge(crit) };
+  });
+  // Resource persons that were rated but are no longer on the list still count.
+  const count = (key) => { const o = {}; rs.forEach(r => { const k = r[key] || "Not given"; o[k] = (o[k] || 0) + 1; }); return o; };
+  const provinces = {}; rs.forEach(r => { const k = normProv(r.province); provinces[k] = (provinces[k] || 0) + 1; });
+  const parts = { "I": sec("I"), "II.A": sec("II.A"), "II.B": sec("II.B"), "II.C": merge(rp.map(x => x.all)) };
+  return { n: rs.length, items, rp, parts, overall: tally(rs.map(r => r.overall)), all: merge(["I", "II.A", "II.B", "II.C"].map(k => parts[k])),
+    gender: count("gender"), provinces, sugg: rs.filter(r => r.suggestions).map(r => r.suggestions), online: rs.filter(r => r.source === "Online").length };
+}
+function normProv(p) {
+  p = String(p || "").trim(); if (!p) return "Not given";
+  const hit = (D.form || EV.form).provinces.find(x => x.toLowerCase() === p.toLowerCase());
+  return hit || p.replace(/\b\w/g, c => c.toUpperCase());
+}
+function barsHtml(c, n) { return n ? `<div class="bars" title="E ${c.E}, VS ${c.VS}, S ${c.S}, P ${c.P}">${["E", "VS", "S", "P"].map(k => c[k] ? `<i class="${k}" style="width:${(c[k] / n * 100).toFixed(1)}%"></i>` : "").join("")}</div>` : ""; }
+const ratingCell = m => m == null ? `<span class="s">No answers</span>` : `<b>${f2(m)}</b> <span class="s">${wordOf(m)}</span>`;
+
+// ---------- Trainings list ----------
+function fillYears() {
+  const ys = [...new Set(D.trainings.map(t => (t.dateFrom || "").slice(0, 4)).filter(Boolean).concat([D.today.slice(0, 4)]))].sort().reverse();
+  ["hYear", "rYear"].forEach(id => { const v = $(id).value; $(id).innerHTML = (id === "hYear" ? `<option value="">All years</option>` : "") + ys.map(y => `<option>${y}</option>`).join(""); $(id).value = v || D.today.slice(0, 4); });
+}
+function renderHome() {
+  const y = $("hYear").value, q = $("hQ").value.trim().toLowerCase(), st = $("hStatus").value;
+  const yearList = D.trainings.filter(t => t.dateFrom.slice(0, 4) === D.today.slice(0, 4));
+  const yResp = D.responses.filter(r => r.status !== "Voided" && yearList.some(t => t.code === r.code));
+  const yo = tally(yResp.map(r => r.overall));
+  $("homeTiles").innerHTML = `<div class="tile"><div class="lb">Trainings in ${D.today.slice(0, 4)}</div><div class="val">${yearList.length}</div></div>
+    <div class="tile"><div class="lb">Answers in ${D.today.slice(0, 4)}</div><div class="val">${yResp.length}</div></div>
+    <div class="tile"><div class="lb">Over all rating, ${D.today.slice(0, 4)}</div><div class="val">${yo.mean == null ? "–" : f2(yo.mean)}</div><div class="sm">${wordOf(yo.mean)}</div></div>
+    <div class="tile"><div class="lb">Online forms open</div><div class="val">${D.trainings.filter(t => t.status === "Open").length}</div></div>`;
+  const list = D.trainings.filter(t => (!y || t.dateFrom.slice(0, 4) === y) && (!st || t.status === st) &&
+    (!q || [t.code, t.title, t.venue, t.conductedBy].concat(t.speakers).join(" ").toLowerCase().includes(q)))
+    .sort((a, b) => (b.dateFrom + b.code).localeCompare(a.dateFrom + a.code));
+  $("hBody").innerHTML = list.map(t => {
+    const rs = validOf(t.code), o = tally(rs.map(r => r.overall));
+    return `<tr data-c="${esc(t.code)}"><td class="s">${esc(t.code)}</td><td><b>${esc(t.title)}</b><div class="s">${esc(t.venue)}</div></td>
+      <td class="hide-m s">${esc(dateRange(t.dateFrom, t.dateTo))}</td><td class="n">${rs.length}${t.expected ? `<span class="s"> of ${t.expected}</span>` : ""}</td>
+      <td class="n">${o.mean == null ? "" : f2(o.mean)}</td><td class="hide-m">${t.status === "Open" ? `<span class="chip ok">Open</span>` : `<span class="chip mute">Closed</span>`}</td></tr>`;
+  }).join("") || `<tr><td colspan="6" class="empty">${D.trainings.length ? "No training matches." : "No trainings yet. Add the first one below."}</td></tr>`;
+  $("hBody").querySelectorAll("tr[data-c]").forEach(tr => tr.onclick = () => openTraining(tr.dataset.c));
+}
+["hQ", "hYear", "hStatus"].forEach(id => $(id).addEventListener("input", renderHome));
+
+// ---------- one training ----------
+function openTraining(c) { CUR = c; renderTraining(); show("tr"); }
+function renderTraining() {
+  const t = byCode(CUR); if (!t) return;
+  const S = summarize(t);
+  $("tTitle").textContent = t.title;
+  $("tMeta").innerHTML = `${esc(t.code)} · ${esc(dateRange(t.dateFrom, t.dateTo))}${t.venue ? " · " + esc(t.venue) : ""}${t.conductedBy ? " · Conducted by " + esc(t.conductedBy) : ""} · ${t.status === "Open" ? `<span class="chip ok">Online form open</span>` : `<span class="chip mute">Online form closed</span>`}`;
+  $("tOpen").textContent = t.status === "Open" ? "Close the online form" : "Open the online form";
+  $("tTiles").innerHTML = `<div class="tile"><div class="lb">Answers</div><div class="val">${S.n}</div><div class="sm">${t.expected ? Math.round(S.n / t.expected * 100) + "% of " + t.expected + " expected" : S.online + " online, " + (S.n - S.online) + " paper"}</div></div>
+    <div class="tile"><div class="lb">Over all (part III)</div><div class="val">${S.overall.mean == null ? "–" : f2(S.overall.mean)}</div><div class="sm">${wordOf(S.overall.mean)}</div></div>
+    <div class="tile"><div class="lb">Average of all ratings</div><div class="val">${S.all.mean == null ? "–" : f2(S.all.mean)}</div><div class="sm">${wordOf(S.all.mean)}</div></div>
+    <div class="tile"><div class="lb">Resource persons</div><div class="val">${S.parts["II.C"].mean == null ? "–" : f2(S.parts["II.C"].mean)}</div><div class="sm">${units(t.speakers.length, ["person", "persons"])}</div></div>`;
+  const F = D.form;
+  const itemRow = it => it.skip ? "" : `<tr><td>${it.no}. ${esc(it.text)}</td><td class="n">${it.counts.E}</td><td class="n">${it.counts.VS}</td><td class="n">${it.counts.S}</td><td class="n">${it.counts.P}</td><td>${barsHtml(it.counts, it.n)}</td><td>${ratingCell(it.mean)}</td></tr>`;
+  const secRow = (label, k) => `<tr class="sec"><td colspan="6">${esc(label)}</td><td>${S.parts[k].mean == null ? "" : f2(S.parts[k].mean) + " " + wordOf(S.parts[k].mean)}</td></tr>`;
+  const head = `<thead><tr><th>Statement</th><th class="n">E</th><th class="n">VS</th><th class="n">S</th><th class="n">P</th><th></th><th>Average</th></tr></thead>`;
+  const gen = Object.entries(S.gender).map(([k, v]) => esc(k) + " " + v).join(", ");
+  const prov = Object.entries(S.provinces).sort((a, b) => b[1] - a[1]).map(([k, v]) => esc(k) + " " + v).join(", ");
+  $("tSummary").innerHTML = !S.n ? `<div class="panel"><p style="margin:0">No answers yet. Share the link or QR code with the participants, or type in the paper forms.</p></div>` :
+    `<div class="panel"><h3>Summary <span class="sub">${esc(gen)}${prov ? " · " + prov : ""}</span></h3>
+      <div class="tablewrap"><table class="list">${head}<tbody>
+      ${secRow("I. " + F.sections["I"], "I")}${S.items.filter(i => i.sec === "I").map(itemRow).join("")}
+      ${secRow("II.A " + F.sections["II.A"], "II.A")}${S.items.filter(i => i.sec === "II.A").map(itemRow).join("")}
+      ${S.items.some(i => i.sec === "II.B" && !i.skip) ? secRow("II.B Training Venue", "II.B") + S.items.filter(i => i.sec === "II.B").map(itemRow).join("") : ""}
+      <tr class="sec"><td colspan="6">III. Over all, I consider this training to be</td><td></td></tr>
+      <tr><td>Over all</td><td class="n">${S.overall.counts.E}</td><td class="n">${S.overall.counts.VS}</td><td class="n">${S.overall.counts.S}</td><td class="n">${S.overall.counts.P}</td><td>${barsHtml(S.overall.counts, S.overall.n)}</td><td>${ratingCell(S.overall.mean)}</td></tr>
+      </tbody></table></div>
+      <div class="legend"><span><i style="background:#0B4BAA"></i>E Excellent</span><span><i style="background:#5C8FD6"></i>VS Very Satisfactory</span><span><i style="background:#A9C3EA"></i>S Satisfactory</span><span><i style="background:#AD0F0A"></i>P Poor</span><span>Average: E = 4, VS = 3, S = 2, P = 1</span></div></div>
+    ${S.rp.length ? `<div class="panel"><h3>II.C Resource Person/Facilitators</h3><div class="tablewrap"><table class="list"><thead><tr><th>Name</th>${F.rp.map(c => `<th class="n" title="${esc(c.text)}">${esc(c.text.split(/[ &]/)[0] === "Was" ? "Interest" : shortCrit(c.text))}</th>`).join("")}<th>Average</th><th class="n">Rated by</th></tr></thead>
+      <tbody>${S.rp.map(x => `<tr><td><b>${esc(x.name)}</b></td>${x.crit.map(c => `<td class="n">${f2(c.mean)}</td>`).join("")}<td>${ratingCell(x.all.mean)}</td><td class="n">${x.n}</td></tr>`).join("")}</tbody></table></div></div>` : ""}
+    <div class="panel"><h3>Suggestions / Recommendations <span class="sub">${units(S.sugg.length, ["answer", "answers"])}</span></h3>
+      ${S.sugg.length ? `<ol class="sugg">${S.sugg.map(s => `<li>${esc(s)}</li>`).join("")}</ol>` : `<p class="hint" style="margin:0">None written yet.</p>`}</div>`;
+  const rs = D.responses.filter(r => r.code === t.code).sort((a, b) => b.no.localeCompare(a.no));
+  $("tResp").innerHTML = rs.map(r => `<tr data-n="${esc(r.no)}"><td>${esc(r.no.slice(-3))}</td><td class="hide-m s">${esc(r.at)}</td><td>${r.source === "Online" ? "Online" : "Paper form"}</td>
+    <td class="hide-m">${esc(r.gender)}</td><td class="hide-m">${esc(r.province)}</td><td>${esc(WORD[r.overall] || "")}</td>
+    <td>${r.status === "Voided" ? `<span class="chip bad">Voided</span>` : `<span class="chip ok">Counted</span>`}</td></tr>`).join("") || `<tr><td colspan="7" class="empty">No answers yet.</td></tr>`;
+  $("tResp").querySelectorAll("tr[data-n]").forEach(tr => tr.onclick = () => openResp(tr.dataset.n));
+}
+function shortCrit(t) { return { "Well": "Prepared", "Able": "Questions", "Adequately": "Methods", "Appropriately": "Dressed" }[t.split(" ")[0]] || t; }
+
+$("tOpen").onclick = async () => {
+  const t = byCode(CUR), to = t.status === "Open" ? "Closed" : "Open";
+  if (to === "Closed" && !confirm("Close the online form? Participants will no longer be able to send answers. You can still type in paper forms, and you can open it again.")) return;
+  try { const j = await api({ action: "setStatus", code: CUR, status: to }); if (!j.ok) return alert(j.error); take(j); renderAll(); } catch (e) { alert(errText(e)); }
+};
+
+// ---------- add or edit a training ----------
+function openTr(t) {
+  t = t || { code: "", title: "", dateFrom: D.today, dateTo: "", venue: "", conductedBy: "HRDU", speakers: [], skip: [], expected: "", remarks: "" };
+  $("trH").textContent = t.code ? "Edit " + t.code : "Add a training";
+  $("trTitle").value = t.title; $("trFrom").value = t.dateFrom; $("trTo").value = t.dateTo && t.dateTo !== t.dateFrom ? t.dateTo : "";
+  $("trVenue").value = t.venue; $("trBy").value = t.conductedBy; $("trExp").value = t.expected || ""; $("trRem").value = t.remarks;
+  $("trRp").value = t.speakers.join("\n");
+  $("trSkip").innerHTML = D.form.items.filter(it => it.sec === "II.B").map(it => `<label><input type="checkbox" value="${it.id}"${t.skip.includes(it.id) ? " checked" : ""}>${esc(it.text.length > 40 ? "Staff service" : it.text)}</label>`).join("");
+  $("trForm").dataset.code = t.code; msg("trMsg", "");
+  $("trDlg").showModal(); $("trTitle").focus();
+}
+$("hAdd").onclick = () => openTr();
+$("tEdit").onclick = () => openTr(byCode(CUR));
+$("trForm").onsubmit = async e => {
+  e.preventDefault();
+  const tr = { code: $("trForm").dataset.code, title: $("trTitle").value, dateFrom: $("trFrom").value, dateTo: $("trTo").value || $("trFrom").value,
+    venue: $("trVenue").value, conductedBy: $("trBy").value, expected: $("trExp").value, remarks: $("trRem").value,
+    speakers: $("trRp").value.split("\n").map(s => s.trim()).filter(Boolean), skip: [...$("trSkip").querySelectorAll("input:checked")].map(x => x.value) };
+  $("trSave").disabled = true; msg("trMsg", "Saving…");
+  try {
+    const j = await api({ action: "saveTraining", training: tr });
+    if (!j.ok) { msg("trMsg", j.error, "err"); return; }
+    take(j); fillYears(); $("trDlg").close(); openTraining(j.code); renderAll();
+    if (!tr.code) openShare();
+  } catch (err) { msg("trMsg", errText(err), "err"); }
+  finally { $("trSave").disabled = false; }
+};
+
+// ---------- share link, QR, poster ----------
+function evalLink(code) {
+  const base = (D.appUrl || gsUrl() || "").replace(/[?#].*$/, "");
+  return base ? base + "?t=" + code : location.href.replace(/[?#].*$/, "") + "#t=" + code;
+}
+function qrSvg(text) {
+  const q = qrcode(0, "M"); q.addData(text); q.make();
+  const n = q.getModuleCount(), m = 2; let d = "";
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) d += "M" + (c + m) + " " + (r + m) + "h1v1h-1z";
+  return `<svg viewBox="0 0 ${n + 2 * m} ${n + 2 * m}" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="100%" height="100%" fill="#fff"/><path d="${d}" fill="#000"/></svg>`;
+}
+function openShare() {
+  const t = byCode(CUR), link = evalLink(t.code);
+  $("shQr").innerHTML = qrSvg(link); $("shLink").value = link; $("shCode").textContent = t.code; msg("shMsg", "");
+  $("shDlg").showModal();
+}
+$("tShare").onclick = openShare;
+$("shCopy").onclick = async () => {
+  try { await navigator.clipboard.writeText($("shLink").value); msg("shMsg", "Link copied.", "ok"); }
+  catch (e) { $("shLink").select(); document.execCommand("copy"); msg("shMsg", "Link copied.", "ok"); }
+};
+$("shOpen").onclick = () => window.open($("shLink").value, "_blank", "noopener");
+$("shPoster").onclick = () => {
+  const t = byCode(CUR), link = evalLink(t.code);
+  doPrint(`<div class="poster"><img class="hdimg" src="${HEADER_BLACK}" alt=""><h1>Training Evaluation</h1>
+    <div class="tt">${esc(t.title)}</div><p>${esc(dateRange(t.dateFrom, t.dateTo))}${t.venue ? ", " + esc(t.venue) : ""}</p>
+    ${qrSvg(link)}<p>Scan the code with your phone camera, answer the form, then tap <b>Send my evaluation</b>.</p>
+    <p>No name is needed. It takes about five minutes.</p><p class="code">${esc(t.code)}</p>
+    <p style="font-size:9pt">Human Resource Development Unit</p></div>`, false, "A5");
+};
+
+// ---------- type in a paper form ----------
+$("tEnc").onclick = () => {
+  const t = byCode(CUR);
+  $("encLead").textContent = `${t.code}, ${t.title}. Copy the paper form as it is. Leave blank what the participant left blank. After saving, the form clears for the next one.`;
+  $("encBody").innerHTML = formHtml(D.form, t, "en", true); wireForm($("encBody")); msg("encMsg", "");
+  $("encDlg").showModal();
+};
+$("encForm").onsubmit = async e => {
+  e.preventDefault();
+  const a = readForm($("encBody"), D.form);
+  const any = Object.keys(a.ratings).length || a.overall || a.rp.some(x => Object.keys(x.ratings).length) || a.suggestions;
+  if (!any) { msg("encMsg", "This form is empty. Tick the ratings from the paper first.", "err"); return; }
+  $("encSave").disabled = true; msg("encMsg", "Saving…");
+  try {
+    const j = await api({ action: "encodeResponse", code: CUR, answers: a });
+    if (!j.ok) { msg("encMsg", j.error, "err"); return; }
+    take(j); renderAll();
+    $("encBody").innerHTML = formHtml(D.form, byCode(CUR), "en", true); wireForm($("encBody"));
+    $("encDlg").querySelector(".db").scrollTop = 0; $("encDlg").scrollTop = 0;
+    msg("encMsg", "Saved as " + j.no + ". Ready for the next form.", "ok");
+  } catch (err) { msg("encMsg", errText(err), "err"); }
+  finally { $("encSave").disabled = false; }
+};
+
+// ---------- one answer ----------
+let RS = null;
+function openResp(no) {
+  const r = D.responses.find(x => x.no === no); if (!r) return; RS = r;
+  const F = D.form, t = byCode(r.code) || { skip: [] };
+  $("rsH").textContent = r.no;
+  const row = (label, v) => `<tr><td>${label}</td><td>${v === "N/A" ? `<span class="s">Not asked</span>` : v ? `<b>${esc(v)}</b> <span class="s">${esc(WORD[v] || "")}</span>` : `<span class="s">Blank</span>`}</td></tr>`;
+  $("rsBody").innerHTML = `<dl class="kv"><dt>Sent</dt><dd>${esc(r.at)}${r.source === "Online" ? ", online" : ", typed in from the paper form by " + esc(r.encodedBy)}</dd>
+      <dt>Province</dt><dd>${esc(r.province) || "–"}</dd><dt>Gender</dt><dd>${esc(r.gender) || "–"}</dd>
+      ${r.status === "Voided" ? `<dt>Voided</dt><dd>${esc(r.voidReason)}</dd>` : ""}</dl>
+    <div class="tablewrap" style="margin-top:14px"><table class="list"><tbody>
+      ${F.items.map((it, i) => row(esc(it.sec + "." + it.no + " " + it.text), r.ratings[i])).join("")}
+      ${r.rp.map(x => `<tr class="sec"><td colspan="2">${esc(x.name)}</td></tr>` + F.rp.map((c, k) => row(esc(c.text), x.ratings[k])).join("")).join("")}
+      <tr class="sec"><td colspan="2">III</td></tr>${row("Over all", r.overall)}
+    </tbody></table></div>
+    <p><b>Suggestions / Recommendations</b><br>${esc(r.suggestions) || `<span class="s">None</span>`}</p>`;
+  $("rsVoid").classList.toggle("hidden", r.status === "Voided"); msg("rsMsg", "");
+  $("rsDlg").showModal();
+}
+$("rsVoid").onclick = async () => {
+  const why = prompt("Why void " + RS.no + "? For example: sent twice, wrong training. It stays in the Sheet marked Voided and is no longer counted.");
+  if (!why || !why.trim()) return;
+  try { const j = await api({ action: "voidResponse", no: RS.no, reason: why }); if (!j.ok) { msg("rsMsg", j.error, "err"); return; } take(j); renderAll(); $("rsDlg").close(); }
+  catch (e) { msg("rsMsg", errText(e), "err"); }
+};
+
+// ---------- yearly report ----------
+function yearRows() {
+  const y = $("rYear").value;
+  return D.trainings.filter(t => t.dateFrom.slice(0, 4) === y).sort((a, b) => (a.dateFrom + a.code).localeCompare(b.dateFrom + b.code)).map(t => ({ t, S: summarize(t) }));
+}
+function renderRep() {
+  const rows = yearRows();
+  $("rBody").innerHTML = rows.map(({ t, S }) => `<tr data-c="${esc(t.code)}"><td class="s">${esc(t.code)}</td><td><b>${esc(t.title)}</b></td><td class="hide-m s">${esc(dateRange(t.dateFrom, t.dateTo))}</td>
+    <td class="n">${S.n}</td>${["I", "II.A", "II.B", "II.C"].map(k => `<td class="n">${f2(S.parts[k].mean)}</td>`).join("")}<td class="n"><b>${f2(S.overall.mean)}</b></td><td>${wordOf(S.overall.mean)}</td></tr>`).join("")
+    || `<tr><td colspan="10" class="empty">No trainings in ${esc($("rYear").value)}.</td></tr>`;
+  $("rBody").querySelectorAll("tr[data-c]").forEach(tr => tr.onclick = () => openTraining(tr.dataset.c));
+}
+$("rYear").addEventListener("input", renderRep);
+
+// ---------- printouts ----------
+function doPrint(html, landscape, paper) {
+  $("pageSize").textContent = "@page { size: " + (paper || "A4") + " " + (landscape ? "landscape" : "portrait") + "; margin: " + (paper ? "8mm" : "10mm 12mm") + "; }";
+  $("printArea").innerHTML = html;
+  document.body.classList.add("printing");
+  const done = () => { document.body.classList.remove("printing"); window.removeEventListener("afterprint", done); };
+  window.addEventListener("afterprint", done);
+  setTimeout(() => { window.print(); setTimeout(done, 1500); }, 200);
+}
+const hd = `<img class="hdimg" src="${HEADER_BLACK}" alt=""><div class="rule"></div>`;
+function signs() {
+  return `<div class="signs"><div>Prepared by:<div class="line">${esc(ME ? ME.name : "")}</div>${esc(ME ? ME.position : "")}</div><div>Noted by:<div class="line"></div>&nbsp;</div></div>`;
+}
+const legend = `<p class="lgd">E Excellent (4), VS Very Satisfactory (3), S Satisfactory (2), P Poor (1). Average: 3.50 to 4.00 Excellent, 2.50 to 3.49 Very Satisfactory, 1.50 to 2.49 Satisfactory, 1.00 to 1.49 Poor. Voided answers are not counted.</p>`;
+function summaryHtml(t) {
+  const S = summarize(t), F = D.form;
+  const avg = m => m == null ? "" : f2(m);
+  const item = (it, cls) => it.skip ? "" : `<tr><td class="${cls}">${it.no}. ${esc(it.text)}</td>${["E", "VS", "S", "P"].map(k => `<td class="cm">${it.counts[k]}</td>`).join("")}<td class="cm">${avg(it.mean)}</td><td>${wordOf(it.mean)}</td></tr>`;
+  const sec = (label, k) => `<tr class="sec"><td colspan="5">${label}</td><td class="cm">${avg(S.parts[k].mean)}</td><td>${wordOf(S.parts[k].mean)}</td></tr>`;
+  const gen = Object.entries(S.gender).map(([k, v]) => esc(k) + " " + v).join(", ") || "–";
+  const prov = Object.entries(S.provinces).sort((a, b) => b[1] - a[1]).map(([k, v]) => esc(k) + " " + v).join(", ") || "–";
+  return `<div class="sheet">${hd}<h3>TRAINING EVALUATION SUMMARY (LEVEL 1)</h3>
+    <table><tr><td class="k">Title of Activity</td><td colspan="3">${esc(t.title)}</td></tr>
+      <tr><td class="k">Date &amp; Venue</td><td colspan="3">${esc(dateRange(t.dateFrom, t.dateTo))}${t.venue ? ", " + esc(t.venue) : ""}</td></tr>
+      <tr><td class="k">Conducted by</td><td>${esc(t.conductedBy) || "–"}</td><td class="k">Training code</td><td>${esc(t.code)}</td></tr>
+      <tr><td class="k">Respondents</td><td>${S.n}${t.expected ? " of " + t.expected + " participants (" + Math.round(S.n / t.expected * 100) + "%)" : ""}, ${S.online} online and ${S.n - S.online} on paper</td><td class="k">Gender</td><td>${gen}</td></tr>
+      <tr><td class="k">Province</td><td colspan="3">${prov}</td></tr></table>
+    <table><thead><tr><th>CATEGORIES</th><th class="cm">E</th><th class="cm">VS</th><th class="cm">S</th><th class="cm">P</th><th class="cm">Average</th><th style="width:28mm">Rating</th></tr></thead><tbody>
+      ${sec("I. " + esc(F.sections["I"].toUpperCase()), "I")}${S.items.filter(i => i.sec === "I").map(i => item(i, "s2")).join("")}
+      <tr class="sec"><td colspan="7">II. DURING THE ACTIVITY</td></tr>
+      ${sec('<span class="s2">A. ' + esc(F.sections["II.A"]) + "</span>", "II.A")}${S.items.filter(i => i.sec === "II.A").map(i => item(i, "s3")).join("")}
+      ${S.items.some(i => i.sec === "II.B" && !i.skip) ? sec('<span class="s2">B. Training Venue</span>', "II.B") + S.items.filter(i => i.sec === "II.B").map(i => item(i, "s3")).join("") : ""}
+      ${S.rp.length ? sec('<span class="s2">C. Resource Person/Facilitators (see below)</span>', "II.C") : ""}
+      <tr class="sec"><td>III. Over all, I consider this training to be</td>${["E", "VS", "S", "P"].map(k => `<td class="cm">${S.overall.counts[k]}</td>`).join("")}<td class="cm">${avg(S.overall.mean)}</td><td>${wordOf(S.overall.mean)}</td></tr>
+      <tr><td><b>Average of all ratings (parts I and II)</b></td><td colspan="4"></td><td class="cm"><b>${avg(S.all.mean)}</b></td><td><b>${wordOf(S.all.mean)}</b></td></tr>
+    </tbody></table>${legend}
+    ${S.rp.length ? `<h4>C. Resource Person/Facilitators</h4><table><thead><tr><th>Name of Resource Person/Facilitator</th>${F.rp.map(c => `<th style="font-size:7.5pt">${esc(c.text)}</th>`).join("")}<th class="cm">Average</th><th>Rating</th><th class="cm">Rated by</th></tr></thead>
+      <tbody>${S.rp.map(x => `<tr><td>${esc(x.name)}</td>${x.crit.map(c => `<td class="c">${avg(c.mean)}</td>`).join("")}<td class="cm"><b>${avg(x.all.mean)}</b></td><td>${wordOf(x.all.mean)}</td><td class="cm">${x.n}</td></tr>`).join("")}</tbody></table>` : ""}
+    <h4>Suggestions / Recommendations to improve future trainings</h4>
+    ${S.sugg.length ? `<ol>${S.sugg.map(s => `<li>${esc(s)}</li>`).join("")}</ol>` : "<p>None written.</p>"}
+    ${signs()}<div class="meta">From the HRDU Training Evaluation app, ${esc(new Date().toLocaleString())}.</div></div>`;
+}
+$("tPrint").onclick = () => doPrint(summaryHtml(byCode(CUR)), false);
+// The paper form, with the title, date, venue and resource persons already filled in.
+function blankHtml(t) {
+  const F = D.form;
+  const rows = sec => F.items.filter(it => it.sec === sec).map(it => `<tr><td class="${sec === "I" ? "s2" : "s3"}">${it.no}. ${esc(it.text)}</td><td class="cm"></td><td class="cm"></td><td class="cm"></td><td class="cm"></td></tr>`).join("");
+  const names = t.speakers.concat(["", ""]).slice(0, Math.max(2, t.speakers.length));
+  return `<div class="sheet paper">${hd}<h3>Training Evaluation Tool (Level 1)</h3>
+    <div class="fld"><div><b>Title of Activity:</b><span>${esc(t.title)}</span></div><div><b>Province:</b><span></span></div>
+      <div><b>Date &amp; Venue:</b><span>${esc(dateRange(t.dateFrom, t.dateTo))}${t.venue ? ", " + esc(t.venue) : ""}</span></div><div><b>Gender:</b><span></span></div></div>
+    <p>Instructions:<br>We are interested in your assessment of the training provided and would like to ask you to complete the form. For each statement, check (/) the column that correspond your answers using a rating of</p>
+    <p class="scale">"E" (EXCELLENT) &nbsp; "VS" (VERY SATISFACTORY) &nbsp; "S" (SATISFACTORY) &nbsp; "P" (POOR)</p>
+    <table><thead><tr><th rowspan="2">CATEGORIES</th><th colspan="4">RATING</th></tr><tr><th class="cm">E</th><th class="cm">VS</th><th class="cm">S</th><th class="cm">P</th></tr></thead><tbody>
+      <tr><td colspan="5">I. PREPARATION FOR THE ACTIVITY</td></tr>${rows("I")}
+      <tr><td colspan="5">II. DURING THE ACTIVITY</td></tr><tr><td colspan="5" class="s2">A. Content and Delivery</td></tr>${rows("II.A")}
+      <tr><td colspan="5" class="s2">B. Training Venue (refer to the standard requirement for training venue)</td></tr>${rows("II.B")}
+      <tr><td colspan="5" class="s2">C. Resource Person/Facilitators</td></tr></tbody></table>
+    <p>INSTRUCTIONS: For each statement write in the column that corresponds to your answers using rating scale of:</p>
+    <p class="scale">"E" (EXCELLENT) &nbsp; "VS" (VERY SATISFACTORY) &nbsp; "S" (SATISFACTORY) &nbsp; "P" (POOR)</p>
+    <table class="rpt"><thead><tr><th style="width:38mm">Name of Resource Person/Facilitator</th>${F.rp.map(c => `<th>${esc(c.text)}</th>`).join("")}</tr></thead>
+      <tbody>${names.map((n, i) => `<tr><td>${i + 1}. ${esc(n)}</td>${F.rp.map(() => "<td></td>").join("")}</tr>`).join("")}</tbody></table>
+    <p>III Over all, I consider this training to be (check the circle that corresponds to your answer)</p>
+    <div class="circles">${["E", "VS", "S", "P"].map(k => `<div><i></i>${k}</div>`).join("")}</div>
+    <p>Suggestions /Recommendations to improve future trainings:</p><div class="ln"></div><div class="ln"></div><div class="ln"></div></div>`;
+}
+$("tBlank").onclick = () => doPrint(blankHtml(byCode(CUR)), false);
+$("rPrint").onclick = () => {
+  const y = $("rYear").value, rows = yearRows();
+  const tot = merge(rows.map(x => x.S.overall)), n = rows.reduce((a, x) => a + x.S.n, 0);
+  doPrint(`<div class="sheet">${hd}<h3>TRAINING EVALUATION REPORT (LEVEL 1), ${esc(y)}</h3>
+    <table><thead><tr><th>Code</th><th>Title of Activity</th><th>Date</th><th class="cm">Resp.</th><th class="cm">I</th><th class="cm">II.A</th><th class="cm">II.B</th><th class="cm">II.C</th><th class="cm">Over all</th><th>Rating</th></tr></thead>
+    <tbody>${rows.map(({ t, S }) => `<tr><td>${esc(t.code)}</td><td>${esc(t.title)}</td><td>${esc(dateRange(t.dateFrom, t.dateTo))}</td><td class="cm">${S.n}</td>${["I", "II.A", "II.B", "II.C"].map(k => `<td class="cm">${f2(S.parts[k].mean)}</td>`).join("")}<td class="cm"><b>${f2(S.overall.mean)}</b></td><td>${wordOf(S.overall.mean)}</td></tr>`).join("") || `<tr><td colspan="10">No trainings.</td></tr>`}
+    <tr class="sec"><td colspan="3">${units(rows.length, ["training", "trainings"])}</td><td class="cm">${n}</td><td colspan="4"></td><td class="cm">${f2(tot.mean)}</td><td>${wordOf(tot.mean)}</td></tr></tbody></table>
+    <p class="lgd">I Preparation for the Activity, II.A Content and Delivery, II.B Training Venue, II.C Resource Person/Facilitators, Over all = part III of the form. The total over all is the average of every participant's part III answer.</p>${legend}
+    ${signs()}<div class="meta">From the HRDU Training Evaluation app, ${esc(new Date().toLocaleString())}.</div></div>`, true);
+};
+
+// ---------- downloads (CSV opens in Excel) ----------
+function csv(rows) { return "﻿" + rows.map(r => r.map(v => { v = String(v == null ? "" : v); if (/^[=+\-@]/.test(v)) v = "'" + v; return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(",")).join("\r\n"); }
+function download(name, text) {
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: "text/csv;charset=utf-8" })); a.download = name;
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+$("tCsv").onclick = () => {
+  const t = byCode(CUR), F = D.form;
+  const rpNames = [...new Set(t.speakers.concat(...D.responses.filter(r => r.code === t.code).map(r => r.rp.map(x => x.name))))];
+  const head = ["Response No.", "Sent", "From", "Encoded By", "Province", "Gender"].concat(F.items.map(it => it.sec + "." + it.no + " " + it.text))
+    .concat(...rpNames.map(n => F.rp.map(c => n + ": " + c.text))).concat(["III Over all", "Suggestions / Recommendations", "Status", "Void Reason"]);
+  const rows = D.responses.filter(r => r.code === t.code).map(r => [r.no, r.at, r.source, r.encodedBy, r.province, r.gender].concat(r.ratings)
+    .concat(...rpNames.map(n => { const x = r.rp.find(y => y.name === n); return F.rp.map((c, k) => x ? x.ratings[k] : ""); }))
+    .concat([r.overall, r.suggestions, r.status, r.voidReason]));
+  download(t.code + " evaluation answers.csv", csv([head].concat(rows)));
+};
+$("rCsv").onclick = () => {
+  const y = $("rYear").value;
+  download("Training evaluation " + y + ".csv", csv([["Code", "Title of Activity", "Date", "Venue", "Conducted By", "Respondents", "Expected", "I Preparation", "II.A Content and Delivery", "II.B Training Venue", "II.C Resource Persons", "Average of all ratings", "III Over all", "Rating"]]
+    .concat(yearRows().map(({ t, S }) => [t.code, t.title, dateRange(t.dateFrom, t.dateTo), t.venue, t.conductedBy, S.n, t.expected || "",
+      f2(S.parts["I"].mean), f2(S.parts["II.A"].mean), f2(S.parts["II.B"].mean), f2(S.parts["II.C"].mean), f2(S.all.mean), f2(S.overall.mean), wordOf(S.overall.mean)]))));
+};
+
+// ---------- accounts (Head) ----------
+let USERS = [];
+async function loadUsers() {
+  renderBackup();
+  $("aBody").innerHTML = `<tr><td colspan="5" class="empty">Loading…</td></tr>`;
+  try { const j = await api({ action: "listUsers" }); if (j.ok) { USERS = j.users; renderUsers(); } else $("aBody").innerHTML = `<tr><td colspan="5" class="empty">${esc(j.error)}</td></tr>`; }
+  catch (e) { $("aBody").innerHTML = `<tr><td colspan="5" class="empty">${esc(errText(e))}</td></tr>`; }
+}
+function renderBackup() { $("aBackup").innerHTML = D.backup.last ? `Last backup of the Sheet: ${esc(D.backup.last)}${D.backup.url ? ` (<a href="${esc(D.backup.url)}" target="_blank" rel="noopener">open</a>)` : ""}. A copy is made on the 1st of every month.` : "No backup yet. A copy of the Sheet is made on the 1st of every month, or use Back up the Sheet now in the menu."; }
+function renderUsers() {
+  $("aBody").innerHTML = USERS.map(u => `<tr data-u="${esc(u.username)}"><td><b>${esc(u.fullName)}</b><div class="s">${esc(u.position)}</div></td><td>${esc(u.username)}</td><td>${esc(u.role)}</td>
+    <td class="hide-m s">${esc(u.lastSignIn) || "Never"}</td><td>${u.status === "Active" ? `<span class="chip ok">Active</span>` : `<span class="chip mute">Disabled</span>`}${u.mustChange ? ` <span class="s">temporary password</span>` : ""}</td></tr>`).join("");
+  $("aBody").querySelectorAll("tr[data-u]").forEach(tr => tr.onclick = () => openUser(USERS.find(u => u.username === tr.dataset.u)));
+}
+function openUser(u) {
+  const isNew = !u; u = u || { fullName: "", position: "", username: "", role: "Staff", status: "Active" };
+  $("usH").textContent = isNew ? "Add an account" : "Account of " + u.fullName;
+  $("usName").value = u.fullName; $("usPos").value = u.position; $("usUser").value = u.username; $("usUser").readOnly = !isNew;
+  $("usRole").value = u.role; $("usStatus").value = u.status; $("usReset").checked = false;
+  $("usStWrap").classList.toggle("hidden", isNew); $("usResetWrap").classList.toggle("hidden", isNew);
+  $("usTemp").classList.add("hidden"); $("usForm").dataset.isNew = isNew ? "1" : ""; msg("usMsg", ""); $("usSave").classList.remove("hidden");
+  $("usDlg").showModal();
+}
+$("aAdd").onclick = () => openUser(null);
+$("usForm").onsubmit = async e => {
+  e.preventDefault();
+  const isNew = !!$("usForm").dataset.isNew;
+  const user = { isNew, username: $("usUser").value, fullName: $("usName").value, position: $("usPos").value, role: $("usRole").value };
+  if (!isNew) { user.status = $("usStatus").value; user.resetPassword = $("usReset").checked; }
+  $("usSave").disabled = true; msg("usMsg", "Saving…");
+  try {
+    const j = await api({ action: "saveUser", user });
+    if (!j.ok) { msg("usMsg", j.error, "err"); return; }
+    USERS = j.users; renderUsers(); msg("usMsg", "Saved.", "ok");
+    if (j.tempPassword) {
+      $("usTemp").innerHTML = `<p style="margin:0 0 6px">Give this temporary password to ${esc(user.fullName)}. It is shown only once. They choose their own at the first sign-in.</p><p>Username <b>${esc(j.username)}</b>, password <span class="temp">${esc(j.tempPassword)}</span></p>`;
+      $("usTemp").classList.remove("hidden"); $("usSave").classList.add("hidden");
+    } else setTimeout(() => $("usDlg").close(), 700);
+  } catch (err) { msg("usMsg", errText(err), "err"); }
+  finally { $("usSave").disabled = false; }
+};
+
+window.addEventListener("hashchange", () => { if (/t=/.test(location.hash)) route(); });
+route();
+</script>
+</body>
+</html>
