@@ -9,11 +9,11 @@ What it does:
 3. **Paper forms.** *Type in a paper form* copies a filled paper form into the Sheet as it is, blanks included. *Print blank form* prints the paper form with the title, date, venue and resource persons already filled in.
 4. **Summary per training.** Number of respondents (against the expected), gender and province, the count of E, VS, S and P for every statement, the average (E = 4, VS = 3, S = 2, P = 1) and its rating, the average of each part, each resource person's ratings, part III (over all), and all the suggestions. It prints on A4 with the official header, Prepared by and Noted by.
 5. **Yearly report.** The average of each part and of part III for every training in the year, for the L&D accomplishment report. Prints on A4 landscape and downloads for Excel.
-6. **Records.** Nothing is deleted. A duplicate or wrong answer is voided by the HRDU head with a reason, kept in the Sheet, and no longer counted. Every change goes to the Audit Trail with the person's name. A copy of the Sheet goes to Google Drive on the 1st of every month.
+6. **Records.** Nothing is deleted. A duplicate or wrong answer is voided by the Administrator with a reason, kept in the Sheet, and no longer counted. Every change goes to the Audit Trail with the person's name. A copy of the Sheet goes to Google Drive on the 1st of every month.
 
 Ratings: 3.50 to 4.00 Excellent, 2.50 to 3.49 Very Satisfactory, 1.50 to 2.49 Satisfactory, 1.00 to 1.49 Poor.
 
-Only HRDU staff have accounts, each with a role. **Head**: everything, with accounts, voiding and backups. **Staff**: add trainings, share links, open and close the online form and type in paper forms. **Viewer**: look and print only.
+Only HRDU staff have accounts, each with a role. **Administrator**: everything, with accounts, voiding and backups. **Staff**: add trainings, share links, open and close the online form and type in paper forms. **Viewer**: look and print only.
 
 ## Files
 
@@ -35,7 +35,7 @@ Only HRDU staff have accounts, each with a role. **Head**: everything, with acco
    - In *Project Settings (gear)*, set the time zone to *(GMT+08:00) Manila* if it is not already.
 3. **Run setup.** Pick `setup` in the function list at the top and click **Run**, then allow the permissions. It protects the tabs, makes the Drive folder *HRDU Training Evaluation Backups*, turns on the monthly backup and sets the setup passcode `HRDU_PASSCODE` to **1234**.
 4. **Deploy.** *Deploy > New deployment > Web app*. *Execute as: Me*, *Who has access: Anyone*. Click Deploy and copy the URL that ends in `/exec`. That is the app link.
-5. **First account.** Open the app link. Since there are no accounts yet, it asks for the setup passcode and makes the HRDU head's account. Then, under *Accounts*, add each HRDU staff member. Each one gets a temporary password, shown once, and chooses their own at the first sign-in.
+5. **First account.** Open the app link. Since there are no accounts yet, it asks for the setup passcode and makes the Administrator account. Then, under *Accounts*, add each HRDU staff member with a role. Each one gets a temporary password, shown once, and chooses their own at the first sign-in.
 
 **After changing the script or the page:** *Deploy > Manage deployments > pencil > Version: New version > Deploy*. The link stays the same.
 

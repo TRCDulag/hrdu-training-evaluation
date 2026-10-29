@@ -226,7 +226,7 @@
   #lock .alt form { display: flex; gap: 8px; } #lock .alt input { margin: 0; } #lock .alt .btn { flex: none; }
   #lock .cf { padding: 0 24px 14px; font-size: 13px; color: var(--muted); }
   #lock .linkbtn { color: var(--brand); font-weight: 600; background: none; border: 0; padding: 0; font: inherit; font-size: 13.5px; cursor: pointer; }
-  /* roles: r1 Viewer, r2 Staff, r3 Head */
+  /* roles: r1 Viewer, r2 Staff, r3 Administrator */
   body.r1 .need2, body.r1 .need3, body.r2 .need3 { display: none !important; }
 
   /* ---------- printouts ---------- */
@@ -297,10 +297,10 @@
       <div class="msg" id="lockMsg" role="status"></div>
     </form>
     <form class="cb2 hidden" id="setupForm" autocomplete="off">
-      <h2>Set up the first account</h2><p class="s">No one has an account yet. The HRDU head makes the first one with the setup passcode, then adds the rest of the staff.</p>
+      <h2>Set up the Administrator account</h2><p class="s">No one has an account yet. Make the Administrator account first with the setup passcode. The Administrator then adds the HRDU staff.</p>
       <label class="f">Setup passcode<input id="suPin" type="password" inputmode="numeric" required></label>
       <label class="f">Full name<input id="suName" required></label>
-      <label class="f">Position<input id="suPos" value="Head, HRDU"></label>
+      <label class="f">Position<input id="suPos" value="Administrator"></label>
       <label class="f">Username<input id="suUser" autocapitalize="none" spellcheck="false" required placeholder="for example msantos"></label>
       <label class="f">Password<input id="suPw" type="password" autocomplete="new-password" required></label>
       <p class="hint">At least 8 characters, with letters and numbers.</p>
@@ -394,7 +394,7 @@
       </section>
 
       <section class="view hidden" id="v-acc">
-        <h2>Accounts</h2><p class="lead">Only HRDU staff have accounts. Head: everything, with accounts, voiding and backups. Staff: add trainings, share links and type in paper forms. Viewer: look and print only.</p>
+        <h2>Accounts</h2><p class="lead">Only HRDU staff have accounts. Administrator: everything, with accounts, voiding and backups. Staff: add trainings, share links and type in paper forms. Viewer: look and print only.</p>
         <div class="tablewrap"><table class="list"><thead><tr><th>Name</th><th>Username</th><th>Role</th><th class="hide-m">Last sign-in</th><th>Status</th></tr></thead><tbody class="click" id="aBody"></tbody>
           <tfoot><tr><td colspan="5"><button class="addrow" id="aAdd"><span class="plus">+</span>Add an account</button></td></tr></tfoot></table></div>
         <p class="hint" id="aBackup"></p>
@@ -455,7 +455,7 @@
     <label class="f"><span class="req">Full name</span><input id="usName" required></label>
     <label class="f">Position<input id="usPos"></label>
     <label class="f"><span class="req">Username</span><input id="usUser" autocapitalize="none" spellcheck="false" required></label>
-    <label class="f">Role<select id="usRole"><option>Staff</option><option>Viewer</option><option>Head</option></select></label>
+    <label class="f">Role<select id="usRole"><option>Staff</option><option>Viewer</option><option>Administrator</option></select></label>
     <label class="f" id="usStWrap">Status<select id="usStatus"><option>Active</option><option>Disabled</option></select></label>
     <label class="cb" id="usResetWrap"><input type="checkbox" id="usReset">Reset the password (a new temporary password is shown once)</label>
     <div id="usTemp" class="hidden"></div>
@@ -491,9 +491,10 @@ const HEADER_BLACK = "%%HEADER_BLACK%%";   // the official header for printouts
 const SEAL_DOH = "%%LOGO_DOH_ROUND%%";
 const SEAL_TRC = "%%LOGO_TRC_ROUND%%";
 const WALLPAPER = "%%WALLPAPER%%";
-const APP_VERSION = "1.0.0";
+const APP_VERSION = "1.0.1";
 // The changelog, newest first. Shown under "What's new".
 const CHANGES = [
+  ["1.0.1", "Oct 29, 2026", ["The top role is now called Administrator, and the first account made with the setup passcode is the Administrator."]],
   ["1.0.0", "Oct 29, 2026", ["First version: the Training Evaluation Tool (Level 1) on the participant's phone, typing in paper forms, the summary per training, the yearly report, and HRDU accounts."]]
 ];
 
@@ -509,7 +510,7 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 const MONTHS_LONG = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const WORD = { E: "Excellent", VS: "Very Satisfactory", S: "Satisfactory", P: "Poor" };
 const POINTS = { E: 4, VS: 3, S: 2, P: 1 };
-const RANK = { Viewer: 1, Staff: 2, Head: 3 };
+const RANK = { Viewer: 1, Staff: 2, Administrator: 3 };
 
 let TOKEN = store.get("token") || "";
 let ME = null;
@@ -1178,7 +1179,7 @@ $("rCsv").onclick = () => {
       f2(S.parts["I"].mean), f2(S.parts["II.A"].mean), f2(S.parts["II.B"].mean), f2(S.parts["II.C"].mean), f2(S.all.mean), f2(S.overall.mean), wordOf(S.overall.mean)]))));
 };
 
-// ---------- accounts (Head) ----------
+// ---------- accounts (Administrator) ----------
 let USERS = [];
 async function loadUsers() {
   renderBackup();
