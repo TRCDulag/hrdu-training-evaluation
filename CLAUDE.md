@@ -8,5 +8,5 @@ DOH TRC Dulag HRDU Training Evaluation (Level 1) app. See README.md for how it w
 - Tests: `npm test` (backend on a mock of Google services) and `npm run test:e2e` (browser, Playwright).
 - Keep the statements and scale worded as on HRDU's paper "Training Evaluation Tool (Level 1)" (ITEMS and RP_CRITERIA in Code.gs).
 - The participant's form is public: `evalInfo` and `submitEval` must never return other participants' answers or staff accounts. Answers are anonymous.
-- Every other action needs a signed-in HRDU account (`session_`); its minimum role is in `NEED` in Code.gs (Viewer, Staff, Head). The server sets `req.by` from the session.
+- Every other action needs a signed-in HRDU account (`session_`); its minimum role is in `NEED` in Code.gs (Viewer, Staff, Administrator). The server sets `req.by` from the session.
 - Each new version: bump `VERSION` (Code.gs), `APP_VERSION` (src/index.src.html) and package.json, and add the change to `CHANGES` in src/index.src.html and to CHANGELOG.md.

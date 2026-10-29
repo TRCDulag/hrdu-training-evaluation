@@ -30,7 +30,7 @@ test('first head needs the passcode, then only once', () => {
   assert.match(call({ action: 'firstHead', pin: '0000', user: { username: 'hrdu', fullName: 'Head HRDU', password: 'secret123' } }).error, /passcode/);
   const j = call({ action: 'firstHead', pin: '1234', user: { username: 'Hrdu.Head', fullName: 'Maria Santos', position: 'HRDU Head', password: 'secret123' } });
   assert.ok(j.ok, j.error); head = j.token;
-  assert.strictEqual(j.me.role, 'Head');
+  assert.strictEqual(j.me.role, 'Administrator');
   assert.match(call({ action: 'firstHead', pin: '1234', user: { username: 'x2', fullName: 'X', password: 'secret123' } }).error, /already/);
   assert.ok(!call({ action: 'publicInit' }).needsSetup);
 });
@@ -167,8 +167,16 @@ test('backup, audit trail and sign-in lockout', () => {
   assert.match(call({ action: 'signIn', username: 'viewer', password: 'viewpass1' }).error, /15 minutes/);
 });
 
-test('there is always an active head', () => {
-  assert.match(call({ action: 'saveUser', token: head, user: { username: 'hrdu.head', role: 'Staff' } }).error, /at least one active Head/);
+test('an account saved as Head in 1.0.0 is an Administrator', () => {
+  const us = be.gas._ss.getSheetByName('Users');
+  us._data[1][3] = 'Head';
+  const j = call({ action: 'listUsers', token: head });
+  assert.ok(j.ok, j.error);
+  assert.strictEqual(j.users[0].role, 'Administrator');
+});
+
+test('there is always an active administrator', () => {
+  assert.match(call({ action: 'saveUser', token: head, user: { username: 'hrdu.head', role: 'Staff' } }).error, /at least one active Administrator/);
 });
 
 console.log(passed + ' passed');

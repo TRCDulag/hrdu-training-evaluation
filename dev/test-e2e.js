@@ -88,7 +88,7 @@ fs.mkdirSync(shots, { recursive: true });
     assert.match(tiles, /Over all \(part III\)2\.67Very Satisfactory/);
     await pc.screenshot({ path: path.join(shots, '07-summary.png'), fullPage: true });
 
-    // void the paper form (Head)
+    // void the paper form (Administrator)
     await pc.click('#tResp tr[data-n="TE-2026-001-003"]');
     await pc.click('#rsVoid');
     await pc.waitForFunction(() => /Answers2/.test(document.getElementById('tTiles').textContent));

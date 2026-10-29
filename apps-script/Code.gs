@@ -16,7 +16,7 @@
  *        Execute as: Me      Who has access: Anyone
  *      Click Deploy and copy the Web app URL (ends in /exec). That is the app link.
  *   5. Open the app. The first time, it asks for the setup passcode and makes the
- *      HRDU head's own account. The head then adds the HRDU staff under Accounts.
+ *      Administrator account. The Administrator then adds the HRDU staff under Accounts.
  *
  * UPDATING an existing deployment (keeps the same URL):
  *   Deploy > Manage deployments > pencil icon > Version: New version > Deploy.
@@ -30,11 +30,11 @@
  *   - Nothing is deleted. A wrong or duplicate response is Voided (with a reason) and kept.
  *   - Every change goes to the Audit Trail tab with the server time and the person's name.
  *   - On the 1st of every month at about 6 AM a copy of this Sheet goes to the Drive folder
- *     "HRDU Training Evaluation Backups". The head can also back up from the app.
+ *     "HRDU Training Evaluation Backups". The Administrator can also back up from the app.
  */
 
 const TZ = 'Asia/Manila';
-const VERSION = '1.0.0';
+const VERSION = '1.0.1';
 const FORM = { title: 'Training Evaluation Tool (Level 1)' };
 
 const TRAININGS = 'Trainings', RESP = 'Responses', RP = 'Resource Person Ratings', USERS = 'Users', AUDIT = 'Audit Trail';
@@ -82,11 +82,12 @@ const USER_HEADERS = ['Username', 'Full Name', 'Position', 'Role', 'Status', 'Pa
   'Last Sign-in', 'Created At', 'Created By', 'Updated At'];
 const AUDIT_HEADERS = ['Timestamp', 'Reference', 'Action', 'By', 'Details', 'Device'];
 
-const ROLES = { 'Viewer': 1, 'Staff': 2, 'Head': 3 };
+const ROLES = { 'Viewer': 1, 'Staff': 2, 'Administrator': 3 };
+const ADMIN = 'Administrator';
 // The lowest role that may do each action. Anything not listed is refused.
 const NEED = { load: 'Viewer', me: 'Viewer', signOut: 'Viewer', changePassword: 'Viewer',
   saveTraining: 'Staff', setStatus: 'Staff', encodeResponse: 'Staff',
-  voidResponse: 'Head', listUsers: 'Head', saveUser: 'Head', backupNow: 'Head' };
+  voidResponse: ADMIN, listUsers: ADMIN, saveUser: ADMIN, backupNow: ADMIN };
 const SESSION_SECONDS = 6 * 3600;
 const STATUSES = ['Open', 'Closed'];
 
@@ -132,7 +133,7 @@ function handle_(req) {
     const me = session_(req.token);
     if (!NEED[req.action]) return { ok: false, error: 'Unknown action.' };
     if (me.mustChange && req.action !== 'changePassword' && req.action !== 'signOut') throw new Error('Please change your temporary password first.');
-    if (ROLES[me.role] < ROLES[NEED[req.action]]) throw new Error('Your role (' + me.role + ') cannot do this. Please ask the HRDU head.');
+    if (ROLES[me.role] < ROLES[NEED[req.action]]) throw new Error('Your role (' + me.role + ') cannot do this. Please ask the Administrator.');
     req.by = me.name;   // the Audit Trail always names the signed-in person
     req.me = me;
     switch (req.action) {
@@ -345,7 +346,7 @@ function setStatus_(req) {
   });
 }
 
-// Head only: a wrong or duplicate response is marked Voided with the reason, never deleted.
+// Administrator only: a wrong or duplicate response is marked Voided with the reason, never deleted.
 function voidResponse_(req) {
   const why = clean_(req.reason);
   if (!why) throw new Error('Give the reason for voiding.');
@@ -426,8 +427,10 @@ function findUser_(username) {
 
 function toMe_(row) {
   return { username: String(row[U['Username']]), name: String(row[U['Full Name']]), position: String(row[U['Position']]),
-    role: ROLES[row[U['Role']]] ? String(row[U['Role']]) : 'Viewer', mustChange: row[U['Must Change Password']] === 'Yes' };
+    role: ROLES[roleOf_(row[U['Role']])] ? roleOf_(row[U['Role']]) : 'Viewer', mustChange: row[U['Must Change Password']] === 'Yes' };
 }
+// Accounts made with 1.0.0 say Head; that role is now called Administrator.
+function roleOf_(v) { return String(v) === 'Head' ? ADMIN : String(v || ''); }
 function publicMe_(me) { return { username: me.username, name: me.name, position: me.position, role: me.role, mustChange: me.mustChange }; }
 
 // The person behind a sign-in token. The Users row is read every time, so a disabled
@@ -440,7 +443,7 @@ function session_(token) {
   const u = c.get('s_' + token);
   if (!u) fail('Your sign-in has expired. Please sign in again.');
   const f = findUser_(u);
-  if (!f || f.row[U['Status']] !== 'Active') { c.remove('s_' + token); fail('Your account is not active. Please ask the HRDU head.'); }
+  if (!f || f.row[U['Status']] !== 'Active') { c.remove('s_' + token); fail('Your account is not active. Please ask the Administrator.'); }
   c.put('s_' + token, u, SESSION_SECONDS);   // six hours from the last use
   return toMe_(f.row);
 }
@@ -455,7 +458,7 @@ function signIn_(req) {
   const u = String(req.username || '').trim().toLowerCase();
   const c = CacheService.getScriptCache();
   if (!u || !req.password) throw new Error('Type your username and password.');
-  if (c.get('lock_' + u)) throw new Error('Too many wrong tries. Please wait 15 minutes, or ask the HRDU head to reset your password.');
+  if (c.get('lock_' + u)) throw new Error('Too many wrong tries. Please wait 15 minutes, or ask the Administrator to reset your password.');
   throttle_();
   return withLock_(() => {
     const f = findUser_(u);
@@ -465,7 +468,7 @@ function signIn_(req) {
       if (n >= 5) { c.put('lock_' + u, '1', 900); c.remove('fail_' + u); }
       if (f) audit_(u, 'SIGN-IN FAILED', u, n >= 5 ? 'Locked for 15 minutes after 5 wrong tries.' : 'Wrong username or password (' + n + ').', req.device);
       throw new Error(f && f.row[U['Status']] !== 'Active' && pwCheck_(req.password, f.row[U['Password']])
-        ? 'Your account is disabled. Please ask the HRDU head.' : 'Wrong username or password.');
+        ? 'Your account is disabled. Please ask the Administrator.' : 'Wrong username or password.');
     }
     c.remove('fail_' + u);
     f.row[U['Last Sign-in']] = dt_(new Date());
@@ -475,7 +478,7 @@ function signIn_(req) {
   });
 }
 
-// The very first account: the HRDU head, made with the setup passcode (HRDU_PASSCODE).
+// The very first account: the Administrator, made with the setup passcode (HRDU_PASSCODE).
 function firstHead_(req) {
   const u = req.user || {};
   return withLock_(() => {
@@ -483,14 +486,14 @@ function firstHead_(req) {
     const want = PropertiesService.getScriptProperties().getProperty('HRDU_PASSCODE');
     if (!want) throw new Error('The setup passcode is not set. Run setup in Apps Script.');
     if (String(req.pin || '') !== want) throw new Error('Wrong setup passcode.');
-    const row = newUserRow_(u, 'Head', 'Setup');
+    const row = newUserRow_(u, ADMIN, 'Setup');
     checkNewPassword_(u.password, row[U['Username']]);
     row[U['Password']] = pwHash_(u.password);
     row[U['Must Change Password']] = 'No';
     const sh = usersSheet_();
     sh.getRange(2, 1, 1, USER_HEADERS.length).setNumberFormat('@');
     sh.getRange(2, 1, 1, USER_HEADERS.length).setValues([row]);
-    audit_(row[U['Username']], 'USER ADDED', row[U['Full Name']], 'First account (Head) made with the setup passcode.', req.device);
+    audit_(row[U['Username']], 'USER ADDED', row[U['Full Name']], 'First account (Administrator) made with the setup passcode.', req.device);
     return { ok: true, token: startSession_(row), me: publicMe_(toMe_(row)) };
   });
 }
@@ -499,7 +502,7 @@ function newUserRow_(u, role, by) {
   const username = String(u.username || '').trim().toLowerCase();
   if (!/^[a-z0-9._-]{3,30}$/.test(username)) throw new Error('Username: 3 to 30 letters, numbers, dots, dashes or underscores, no spaces.');
   if (!clean_(u.fullName)) throw new Error('Full name is required.');
-  if (!ROLES[role]) throw new Error('Pick a role: Head, Staff or Viewer.');
+  if (!ROLES[role]) throw new Error('Pick a role: Administrator, Staff or Viewer.');
   const row = new Array(USER_HEADERS.length).fill('');
   const stamp = dt_(new Date());
   row[U['Username']] = username; row[U['Full Name']] = clean_(u.fullName); row[U['Position']] = clean_(u.position);
@@ -537,11 +540,11 @@ function changePassword_(req) {
 
 function listUsers_() {
   return { ok: true, users: userRows_().map(r => ({ username: String(r[U['Username']]), fullName: String(r[U['Full Name']]),
-    position: String(r[U['Position']]), role: String(r[U['Role']]), status: String(r[U['Status']]),
+    position: String(r[U['Position']]), role: roleOf_(r[U['Role']]), status: String(r[U['Status']]),
     mustChange: r[U['Must Change Password']] === 'Yes', lastSignIn: show_(r[U['Last Sign-in']]) })) };
 }
 
-// Head only: add an HRDU account, change its name, position, role or status, or reset its password.
+// Administrator only: add an HRDU account, change its name, position, role or status, or reset its password.
 // New accounts and resets get a temporary password, shown once, that must be changed at the next sign-in.
 function saveUser_(req) {
   const u = req.user || {};
@@ -562,15 +565,15 @@ function saveUser_(req) {
       const before = [row[U['Full Name']], row[U['Position']], row[U['Role']], row[U['Status']]].join(' / ');
       if (u.fullName !== undefined) { if (!clean_(u.fullName)) throw new Error('Full name is required.'); row[U['Full Name']] = clean_(u.fullName); }
       if (u.position !== undefined) row[U['Position']] = clean_(u.position);
-      if (u.role !== undefined) { if (!ROLES[u.role]) throw new Error('Pick a role: Head, Staff or Viewer.'); row[U['Role']] = u.role; }
+      if (u.role !== undefined) { if (!ROLES[u.role]) throw new Error('Pick a role: Administrator, Staff or Viewer.'); row[U['Role']] = u.role; }
       if (u.status !== undefined) { if (['Active', 'Disabled'].indexOf(u.status) < 0) throw new Error('Pick Active or Disabled.'); row[U['Status']] = u.status; }
       if (u.resetPassword) { temp = tempPassword_(); row[U['Password']] = pwHash_(temp); row[U['Must Change Password']] = 'Yes'; }
       const after = [row[U['Full Name']], row[U['Position']], row[U['Role']], row[U['Status']]].join(' / ');
       what = (before !== after ? before + ' to ' + after : '') + (u.resetPassword ? (before !== after ? '; ' : '') + 'password reset' : '');
       if (!what) return Object.assign(listUsers_(), { unchanged: true });
       // Someone must always be able to manage the accounts.
-      const heads = userRows_().filter(x => String(x[U['Username']]) !== row[U['Username']] && x[U['Role']] === 'Head' && x[U['Status']] === 'Active').length;
-      if (!heads && (row[U['Role']] !== 'Head' || row[U['Status']] !== 'Active')) throw new Error('There must always be at least one active Head account.');
+      const heads = userRows_().filter(x => String(x[U['Username']]) !== row[U['Username']] && roleOf_(x[U['Role']]) === ADMIN && x[U['Status']] === 'Active').length;
+      if (!heads && (roleOf_(row[U['Role']]) !== ADMIN || row[U['Status']] !== 'Active')) throw new Error('There must always be at least one active Administrator account.');
     }
     row[U['Updated At']] = dt_(new Date());
     sh.getRange(r, 1, 1, USER_HEADERS.length).setNumberFormat('@');
