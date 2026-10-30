@@ -71,6 +71,7 @@ function createGas() {
       'yyyy-MM-dd HH:mm': Y + '-' + pad(M + 1) + '-' + pad(D) + ' ' + pad(h) + ':' + pad(m),
       'yyyy-MM-dd HHmm': Y + '-' + pad(M + 1) + '-' + pad(D) + ' ' + pad(h) + pad(m),
       'yyyy-MM-dd HHmmss': Y + '-' + pad(M + 1) + '-' + pad(D) + ' ' + pad(h) + pad(m) + pad(s),
+      'MMM d, yyyy': MON[M] + ' ' + D + ', ' + Y,
       'MMM d, yyyy h:mm a': MON[M] + ' ' + D + ', ' + Y + ' ' + (h % 12 || 12) + ':' + pad(m) + ' ' + (h < 12 ? 'AM' : 'PM') };
     if (!(f in map)) throw new Error('mock formatDate: unsupported pattern ' + f);
     return map[f];
@@ -118,9 +119,11 @@ function createGas() {
 }
 
 // Loads Code.gs into a fresh mock and returns { gas, code } where code holds its top-level functions.
-function loadBackend() {
+// With `now` (a time in ms) the backend's clock is fixed there, so dated rules can be tested.
+function loadBackend(now) {
   const gas = createGas();
-  const ctx = vm.createContext(Object.assign({ console, Date }, gas));
+  const D = now ? class extends Date { constructor(...a) { if (a.length) super(...a); else super(now); } static now() { return now; } static [Symbol.hasInstance](x) { return x instanceof Date; } } : Date;
+  const ctx = vm.createContext(Object.assign({ console, Date: D }, gas));
   const src = fs.readFileSync(path.join(__dirname, '..', 'apps-script', 'Code.gs'), 'utf8');
   vm.runInContext(src + '\n;this.__exports = { setup, handle_, doGet, doPost, api, monthlyBackup };', ctx, { filename: 'Code.gs' });
   return { gas, code: ctx.__exports, ctx };

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HRDU Training Evaluation</title>
+<title>HRDU System</title>
 <meta name="theme-color" content="#1F2A45">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -226,8 +226,61 @@
   #lock .alt form { display: flex; gap: 8px; } #lock .alt input { margin: 0; } #lock .alt .btn { flex: none; }
   #lock .cf { padding: 0 24px 14px; font-size: 13px; color: var(--muted); }
   #lock .linkbtn { color: var(--brand); font-weight: 600; background: none; border: 0; padding: 0; font: inherit; font-size: 13.5px; cursor: pointer; }
-  /* roles: r1 Viewer, r2 Staff, r3 Administrator */
-  body.r1 .need2, body.r1 .need3, body.r2 .need3 { display: none !important; }
+  /* roles: r0 Employee, r1 Viewer, r2 Staff, r3 Administrator */
+  body.r0 .need1, body.r0 .need2, body.r0 .need3, body.r1 .need2, body.r1 .need3, body.r2 .need3 { display: none !important; }
+  body:not(.hasEmp) .needEmp { display: none !important; }
+  #v-card.self .staffonly { display: none !important; }
+  #v-card:not(.self) .selfonly { display: none !important; }
+
+  /* leave cards */
+  table.card { font-size: 14px; }
+  table.card th, table.card td { padding: 8px 9px; }
+  table.card th.g { text-align: center; border-left: 1px solid var(--line); }
+  table.card td.n, table.card th.n { text-align: right; }
+  table.card td.bl { border-left: 1px solid var(--line-2); }
+  table.card td.bal { font-weight: 600; color: var(--navy); }
+  table.card tr.earned td { color: var(--muted); }
+  table.card tr.earned td.bal { color: var(--navy); }
+  table.card tr.fwd td { background: #F6FBF9; font-weight: 600; }
+  .choice.col { flex-direction: column; align-items: stretch; }
+  .tiles .tile.warn { background: var(--warn-soft); border-color: #EBD98A; }
+  .slips { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+  .slip { border: 1px dashed #000; padding: 4mm; font-family: Arial, sans-serif; font-size: 10pt; break-inside: avoid; }
+  .slip b.t { font-family: ui-monospace, Consolas, monospace; font-size: 13pt; letter-spacing: .06em; }
+
+  /* CS Form No. 6, Revised 2020, as HRDU prints it on long bond paper */
+  .cs6 { font-family: Arial, Helvetica, sans-serif; font-size: 8.6pt; color: #000; line-height: 1.2; }
+  .cs6 .top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .cs6 .top i { font-weight: bold; font-size: 8pt; }
+  .cs6 .alloc { font-size: 7.6pt; font-weight: bold; text-align: left; line-height: 1.5; }
+  .cs6 .mast { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin: 2mm 0 1mm; }
+  .cs6 .mast .l { display: flex; gap: 2mm; justify-content: flex-end; padding-right: 4mm; } .cs6 .mast .l img { width: 17mm; height: 17mm; }
+  .cs6 .mast .r { padding-left: 6mm; } .cs6 .mast .r img { width: 20mm; }
+  .cs6 .mast .c { text-align: center; font-weight: bold; font-size: 8.6pt; line-height: 1.25; }
+  .cs6 h1 { text-align: center; font-size: 15pt; margin: 1mm 0 2mm; }
+  .cs6 .box { border: 1.2pt solid #000; }
+  .cs6 .r2 { display: grid; border-bottom: .8pt solid #000; }
+  .cs6 .cell { padding: 1mm 1.5mm; min-height: 9mm; }
+  .cs6 .cell + .cell { border-left: .8pt solid #000; }
+  .cs6 .fill { font-weight: bold; font-size: 9.6pt; text-transform: uppercase; }
+  .cs6 .sh { text-align: center; font-weight: bold; font-size: 10pt; padding: 1mm; border-bottom: .8pt solid #000; }
+  .cs6 .two { display: grid; grid-template-columns: 55% 45%; border-bottom: .8pt solid #000; }
+  .cs6 .two > div { padding: 1.2mm 1.5mm; }
+  .cs6 .two > div + div { border-left: .8pt solid #000; }
+  .cs6 .ck { display: flex; gap: 1.6mm; align-items: flex-start; margin: .9mm 0; }
+  .cs6 .ck b.k { flex: none; width: 3.4mm; height: 3.4mm; border: .8pt solid #000; display: inline-flex; align-items: center; justify-content: center; font-size: 8pt; line-height: 1; }
+  .cs6 .sub { font-style: italic; margin: 1.2mm 0 .5mm; }
+  .cs6 .ind { padding-left: 4mm; }
+  .cs6 .u { border-bottom: .6pt solid #000; display: inline-block; min-width: 30mm; padding: 0 1mm; font-weight: bold; }
+  .cs6 .uw { border-bottom: .6pt solid #000; min-height: 4.2mm; padding: 0 1mm; font-weight: bold; }
+  .cs6 table.cr { width: 86%; margin: 1.5mm auto; border-collapse: collapse; }
+  .cs6 table.cr td { border: .6pt solid #000; padding: .4mm 1.5mm; text-align: center; height: 4.6mm; }
+  .cs6 table.cr td:first-child { text-align: right; font-style: italic; border: 0; padding-right: 2mm; }
+  .cs6 .sig { text-align: center; margin-top: 4mm; }
+  .cs6 .sig .nm { font-weight: bold; font-size: 10.5pt; text-transform: uppercase; border-bottom: .8pt solid #000; padding-bottom: .3mm; min-height: 5mm; }
+  .cs6 .chief { text-align: center; padding: 10mm 0 3mm; }
+  .cs6 .chief .nm { display: inline-block; min-width: 70mm; border-bottom: .8pt solid #000; font-weight: bold; text-transform: uppercase; font-size: 10.5pt; }
+  .cs6 .meta { font-size: 6.5pt; color: #444; margin-top: 1.5mm; }
 
   /* ---------- printouts ---------- */
   #printArea { display: none; }
@@ -286,9 +339,9 @@
 <div id="lock" class="hidden">
   <div class="card">
     <div class="ch"><div class="seals"><img class="pDoh" alt="Department of Health"><img class="pTrc" alt="TRC Dulag"></div>
-      <h1>Training Evaluation</h1><p>Human Resource Development Unit, DOH TRC Dulag</p></div>
+      <h1>HRDU System</h1><p>Human Resource Development Unit, DOH TRC Dulag</p></div>
     <form class="cb2" id="lockForm" autocomplete="on">
-      <h2>Sign in</h2><p class="s">For HRDU staff. Use your own username and password.</p>
+      <h2>Sign in</h2><p class="s">For HRDU staff and TRC Dulag employees. Use your own username and password. Employees: your username is your employee number unless HRDU gave you another.</p>
       <label class="f">Username<input id="uIn" autocomplete="username" autocapitalize="none" spellcheck="false" required></label>
       <label class="f">Password<input id="pwIn" type="password" autocomplete="current-password" required></label>
       <label class="f hidden" id="urlWrap" style="margin-top:12px">App link (the Apps Script web app URL ending in /exec)
@@ -335,13 +388,13 @@
 <div id="app" class="hidden">
   <header class="bar">
     <div class="seals"><img class="pDoh" alt=""><img class="pTrc" alt=""></div>
-    <div class="apptitle"><b>Training Evaluation</b><span>Human Resource Development Unit, DOH TRC Dulag</span></div>
+    <div class="apptitle"><b>HRDU System</b><span>Human Resource Development Unit, DOH TRC Dulag</span></div>
     <span class="hint" id="syncState" style="color:rgba(255,255,255,.7);margin:0"></span>
     <div class="menu">
       <button class="hbtn" id="menuBtn" aria-haspopup="true" aria-expanded="false"><span class="av" id="meAv">HR</span><span class="mt"><span id="meName"></span><small id="meRoleS"></small></span></button>
       <div class="menupanel hidden" id="menuPanel">
         <div class="mh"><b id="meName2"></b><span id="meRole"></span></div>
-        <button id="mReload">Refresh data</button>
+        <button id="mReload" class="need1">Refresh data</button>
         <button id="mPw">Change my password</button>
         <button id="mNew">What's new</button>
         <button id="mBackup" class="need3">Back up the Sheet now</button>
@@ -351,8 +404,11 @@
   </header>
   <div class="shell">
     <nav class="tabs">
-      <button data-v="home"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10"/></svg>Trainings</button>
-      <button data-v="rep"><svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>Yearly report</button>
+      <button data-v="home" class="need1"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10"/></svg>Trainings</button>
+      <button data-v="rep" class="need1"><svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>Yearly report</button>
+      <button data-v="lv" class="need1"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Leave cards</button>
+      <button data-v="apps" class="need1"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13l2 2 4-4"/></svg>Leave applications<span class="chip hidden" id="navPend" style="margin-left:auto"></span></button>
+      <button data-v="my" class="needEmp"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>My leave card</button>
       <button data-v="acc" class="need3"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>Accounts</button>
     </nav>
     <main>
@@ -394,10 +450,58 @@
       </section>
 
       <section class="view hidden" id="v-acc">
-        <h2>Accounts</h2><p class="lead">Only HRDU staff have accounts. Administrator: everything, with accounts, voiding and backups. Staff: add trainings, share links and type in paper forms. Viewer: look and print only.</p>
+        <h2>Accounts</h2><p class="lead">HRDU staff accounts. Administrator: everything, with accounts, voiding, balance adjustments, forced leave posting and backups. Staff: trainings, leave cards and leave applications. Viewer: look and print only. Employee accounts are made from each employee's leave card.</p>
         <div class="tablewrap"><table class="list"><thead><tr><th>Name</th><th>Username</th><th>Role</th><th class="hide-m">Last sign-in</th><th>Status</th></tr></thead><tbody class="click" id="aBody"></tbody>
           <tfoot><tr><td colspan="5"><button class="addrow" id="aAdd"><span class="plus">+</span>Add an account</button></td></tr></tfoot></table></div>
         <p class="hint" id="aBackup"></p>
+        <div class="panel" style="margin-top:18px"><h3>Signatories <span class="sub">The names in the drop-down lists of the leave application (CS Form No. 6).</span></h3>
+          <div class="tablewrap"><table class="list"><thead><tr><th>Name</th><th>Position</th><th>Signs</th><th>Status</th></tr></thead><tbody class="click" id="sgBody"></tbody>
+            <tfoot><tr><td colspan="4"><button class="addrow" id="sgAdd"><span class="plus">+</span>Add a signatory</button></td></tr></tfoot></table></div></div>
+      </section>
+
+      <section class="view hidden" id="v-lv">
+        <h2>Leave cards</h2><p class="lead">Each employee's leave card under the CSC Omnibus Rules on Leave. Every full month earns 1.25 days of vacation leave and 1.25 days of sick leave, credited at the end of the month.</p>
+        <div class="tiles" id="lvTiles"></div>
+        <div class="filters"><label class="f q">Search<input id="lvQ" type="search" placeholder="Name, employee number, position or office"></label>
+          <label class="f">Office / unit<select id="lvOffice"></select></label>
+          <label class="f">Status<select id="lvStatus"><option value="Active">Active</option><option value="Separated">Separated</option><option value="">All</option></select></label></div>
+        <div class="row" style="margin-bottom:12px"><button class="btn ghost small need2" id="lvAccAll">Make sign-in accounts for everyone</button>
+          <button class="btn ghost small" id="lvForced">Forced leave at year end</button><span class="spacer"></span><button class="btn ghost small" id="lvCsv">Download balances (Excel)</button></div>
+        <div class="tablewrap"><table class="list"><thead><tr><th>Employee No.</th><th>Name</th><th class="hide-m">Office / unit</th><th class="n">VL</th><th class="n">SL</th><th class="hide-m">Sign-in</th></tr></thead>
+          <tbody class="click" id="lvBody"></tbody>
+          <tfoot class="need2"><tr><td colspan="6"><button class="addrow" id="lvAdd"><span class="plus">+</span>Add an employee</button></td></tr></tfoot></table></div>
+      </section>
+
+      <section class="view hidden" id="v-apps">
+        <h2>Leave applications</h2><p class="lead">Applications on CS Form No. 6 waiting for action. Open one to pick the signatories, print the form, and record the approval or disapproval after it is signed.</p>
+        <div class="row" style="margin-bottom:12px"><button class="btn need2" id="apNew">Type in a paper application</button></div>
+        <div class="tablewrap"><table class="list"><thead><tr><th>No.</th><th>Employee</th><th>Type of leave</th><th class="hide-m">Dates</th><th class="n">Days</th><th class="hide-m">Filed</th></tr></thead><tbody class="click" id="apBody"></tbody></table></div>
+      </section>
+
+      <section class="view hidden" id="v-card">
+        <p style="margin:0 0 8px" class="staffonly"><button class="btn ghost small" data-go="lv">Back to leave cards</button></p>
+        <h2 id="cTitle"></h2><p class="lead" id="cMeta"></p>
+        <div class="row" style="margin-bottom:16px">
+          <button class="btn selfonly" id="cApply">Apply for leave</button>
+          <button class="btn staffonly need2" id="cApp">Leave application</button>
+          <button class="btn ghost staffonly need2" data-kind="Leave">Record leave</button>
+          <button class="btn ghost staffonly need2" data-kind="Tardiness/Undertime">Tardiness / undertime</button>
+          <button class="btn ghost staffonly need2" data-kind="Absence without pay">Absence without pay</button>
+          <button class="btn ghost staffonly need2" data-kind="Monetization">Monetization</button>
+          <button class="btn ghost staffonly need3" data-kind="Adjustment">Adjustment</button>
+          <button class="btn ghost staffonly need2" id="cEdit">Edit</button>
+          <button class="btn ghost staffonly need2" id="cAcc">Sign-in account</button>
+        </div>
+        <div class="tiles" id="cTiles"></div>
+        <div class="panel" id="cAppsP"><h3>Leave applications <span class="sub">CS Form No. 6, Revised 2020. Click one to see it or print it.</span></h3>
+          <div class="tablewrap"><table class="list"><thead><tr><th>No.</th><th>Type of leave</th><th class="hide-m">Dates</th><th class="n">Days</th><th>Status</th></tr></thead><tbody class="click" id="cApps"></tbody></table></div></div>
+        <div class="panel"><h3>Leave card <span class="sub" id="cSub"></span></h3>
+          <div class="row" style="margin-bottom:10px"><label class="f" style="min-width:140px">Year<select id="cYear"></select></label><span class="spacer"></span><button class="btn ghost small" id="cPrint">Print leave card</button></div>
+          <div class="tablewrap"><table class="list card"><thead>
+            <tr><th rowspan="2">Period</th><th rowspan="2">Particulars</th><th colspan="4" class="g">Vacation leave</th><th colspan="4" class="g">Sick leave</th><th rowspan="2" class="hide-m">Action taken</th></tr>
+            <tr><th class="n g">Earned</th><th class="n">W/P</th><th class="n">Balance</th><th class="n">W/O P</th><th class="n g">Earned</th><th class="n">W/P</th><th class="n">Balance</th><th class="n">W/O P</th></tr></thead>
+            <tbody id="cBody"></tbody></table></div>
+          <p class="hint">W/P: absences, undertime and leave with pay, taken from the balance. W/O P: without pay, which also lowers what that month earns. Tardiness and undertime use the CSC table (1 hour = 0.125 day, 1 minute = 0.002).</p></div>
       </section>
     </main>
   </div>
@@ -456,6 +560,7 @@
     <label class="f">Position<input id="usPos"></label>
     <label class="f"><span class="req">Username</span><input id="usUser" autocapitalize="none" spellcheck="false" required></label>
     <label class="f">Role<select id="usRole"><option>Staff</option><option>Viewer</option><option>Administrator</option></select></label>
+    <label class="f">Employee No. <span class="s" style="font-weight:400">(optional, to see their own leave card)</span><input id="usEmp" autocapitalize="characters" maxlength="20"></label>
     <label class="f" id="usStWrap">Status<select id="usStatus"><option>Active</option><option>Disabled</option></select></label>
     <label class="cb" id="usResetWrap"><input type="checkbox" id="usReset">Reset the password (a new temporary password is shown once)</label>
     <div id="usTemp" class="hidden"></div>
@@ -478,6 +583,117 @@
   <div class="db" id="newBody"></div>
 </dialog>
 
+<!-- employee -->
+<dialog id="emDlg"><form id="emForm" method="dialog">
+  <div class="dh"><h3 id="emH">Add an employee</h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
+  <div class="db"><div class="grid">
+    <label class="f"><span class="req">Employee No.</span><input id="emNo" required maxlength="20" autocapitalize="characters"></label>
+    <label class="f"><span class="req">Status of appointment</span><select id="emAppt"></select></label>
+    <label class="f"><span class="req">Last name</span><input id="emLast" required></label>
+    <label class="f"><span class="req">First name</span><input id="emFirst" required></label>
+    <label class="f">Middle name<input id="emMid"></label>
+    <label class="f">Position<input id="emPos"></label>
+    <label class="f wide">Office / unit<input id="emOff" list="emOffList"><datalist id="emOffList"></datalist></label>
+    <label class="f">Date of original appointment<input id="emAppd" type="date"></label>
+    <label class="f"><span class="req">Leave card starts</span><input id="emStart" type="date" required></label>
+    <div class="wide" id="emBalWrap"><p class="hint" style="margin:0 0 6px">Balances carried over from the old leave card, as of the day the leave card starts. For a new employee, the first day of service and 0.</p>
+      <div class="grid"><label class="f">VL balance<input id="emVl" type="number" step="0.001" min="0" inputmode="decimal"></label><label class="f">SL balance<input id="emSl" type="number" step="0.001" min="0" inputmode="decimal"></label></div></div>
+    <label class="f">Monthly salary<input id="emSal" inputmode="decimal"></label>
+    <label class="f">Highest monthly salary<input id="emHigh" inputmode="decimal" placeholder="for the terminal leave estimate"></label>
+    <label class="f" id="emStWrap">Employment status<select id="emSt"><option>Active</option><option>Separated</option></select></label>
+    <label class="f" id="emSepWrap">Separation date<input id="emSep" type="date"></label>
+    <label class="f wide">Remarks<input id="emRem" maxlength="500"></label>
+  </div></div>
+  <div class="df"><span class="msg" id="emMsg" role="status"></span><button class="btn ghost" type="button" data-close>Cancel</button><button class="btn" id="emSave" type="submit">Save</button></div>
+</form></dialog>
+
+<!-- a line on the leave card -->
+<dialog id="enDlg" class="small"><form id="enForm" method="dialog">
+  <div class="dh"><h3 id="enH"></h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
+  <div class="db"><div class="grid" style="grid-template-columns:1fr 1fr" id="enBody"></div><p class="hint" id="enHint"></p></div>
+  <div class="df"><span class="msg" id="enMsg" role="status"></span><button class="btn ghost" type="button" data-close>Cancel</button><button class="btn" id="enSave" type="submit">Save</button></div>
+</form></dialog>
+
+<!-- see a line, void it -->
+<dialog id="liDlg" class="small">
+  <div class="dh"><h3 id="liH"></h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
+  <div class="db" id="liBody"></div>
+  <div class="df"><span class="msg" id="liMsg" role="status"></span><button class="btn danger need3" id="liVoid">Void this line</button><button class="btn ghost" type="button" data-close>Close</button></div>
+</dialog>
+
+<!-- leave application, part 6 of CS Form No. 6 -->
+<dialog id="laDlg"><form id="laForm" method="dialog">
+  <div class="dh"><h3 id="laH">Application for leave</h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
+  <div class="db"><div class="grid">
+    <label class="f wide" id="laEmpWrap"><span class="req">Employee</span><select id="laEmp"></select></label>
+    <label class="f">3. Date of filing<input id="laFiled" type="date"></label>
+    <label class="f wide"><span class="req">6.A Type of leave to be availed of</span><select id="laType"></select></label>
+    <label class="f wide hidden" id="laOthWrap">Others (specify)<input id="laOth" maxlength="150"></label>
+    <div class="wide" id="laDetWrap"><span class="f" style="font-size:14px;font-weight:600;color:var(--head)">6.B Details of leave <span id="laDetHead" style="font-weight:400;color:var(--muted)"></span></span>
+      <div class="choice" id="laDet"></div>
+      <label class="f hidden" id="laSpecWrap" style="margin-top:8px"><span id="laSpecL">Specify</span><input id="laSpec" maxlength="200"></label></div>
+    <label class="f" id="laFromW">Inclusive dates, from<input id="laFrom" type="date"></label>
+    <label class="f" id="laToW">to<input id="laTo" type="date"></label>
+    <label class="f"><span class="req">6.C Number of working days applied for</span><input id="laDays" type="number" step="0.5" min="0" inputmode="decimal"></label>
+    <div><span class="f" style="font-size:14px;font-weight:600;color:var(--head)">6.D Commutation</span>
+      <div class="choice" id="laCom"><label><input type="radio" name="laCom" value="Not Requested" checked>Not Requested</label><label><input type="radio" name="laCom" value="Requested">Requested</label></div></div>
+    <label class="f wide">Recommending officer (7.B)<select id="laRec"></select></label>
+  </div><p class="hint" id="laHint"></p></div>
+  <div class="df"><span class="msg" id="laMsg" role="status"></span><button class="btn ghost" type="button" data-close>Cancel</button><button class="btn" id="laSave" type="submit">File the application</button></div>
+</form></dialog>
+
+<!-- one application: part 7, print, decision -->
+<dialog id="acDlg">
+  <div class="dh"><h3 id="acH"></h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
+  <div class="db"><div id="acSum"></div>
+    <div id="acAct" class="need2"><h4 style="margin:16px 0 6px">7. Details of action on application</h4><div class="grid">
+      <label class="f">7.A Leave credits as of<input id="acAsOf" type="date"></label>
+      <label class="f">7.A Certified by<select id="acCert"></select></label>
+      <label class="f">7.B Recommending officer<select id="acRec"></select></label>
+      <label class="f">7.B Recommendation<select id="acRecV"><option value="">Not yet</option><option>For approval</option><option>For disapproval</option></select></label>
+      <label class="f wide hidden" id="acRecRW">For disapproval due to<input id="acRecR" maxlength="300"></label>
+      <label class="f">Approving officer (7.C / 7.D)<select id="acApp"></select></label>
+    </div>
+    <div class="panel" style="margin:14px 0 0;padding:14px" id="acDecide"><b>After the form is signed, record the decision</b>
+      <div class="grid" style="margin-top:8px">
+        <label class="f">7.C Days with pay<input id="acWp" type="number" step="0.5" min="0" inputmode="decimal"></label>
+        <label class="f">7.C Days without pay<input id="acWop" type="number" step="0.5" min="0" inputmode="decimal"></label>
+        <label class="f">7.C Others (specify)<input id="acOth" maxlength="150"></label>
+        <label class="f">7.D Disapproved due to<input id="acDis" maxlength="300"></label>
+      </div>
+      <div class="row" style="margin-top:10px"><button class="btn" id="acApprove">Approved, put it on the leave card</button><button class="btn danger" id="acDisapprove">Disapproved</button></div></div></div></div>
+  <div class="df"><span class="msg" id="acMsg" role="status"></span><button class="btn danger" id="acCancel">Cancel this application</button><button class="btn ghost need2" id="acSaveS">Save signatories</button><button class="btn ghost" id="acPrint">Print CS Form No. 6</button><button class="btn ghost" type="button" data-close>Close</button></div>
+</dialog>
+
+<!-- employee sign-in accounts -->
+<dialog id="eaDlg" class="small">
+  <div class="dh"><h3 id="eaH">Sign-in account</h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
+  <div class="db" id="eaBody"></div>
+  <div class="df"><span class="msg" id="eaMsg" role="status"></span><button class="btn ghost hidden" id="eaSlips">Print password slips</button><button class="btn ghost" type="button" data-close>Close</button></div>
+</dialog>
+
+<!-- forced leave at year end -->
+<dialog id="fdDlg">
+  <div class="dh"><h3>Forced leave at year end</h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
+  <div class="db"><p class="hint" style="margin-top:0">Section 25: anyone who had 10 or more days of VL must take 5 days of VL within the year. What was not taken is deducted from VL on December 31, unless the head cancelled the scheduled leave for the service. Untick those excused that way.</p>
+    <div class="row" style="margin-bottom:10px"><label class="f" style="min-width:140px">Year<select id="fdYear"></select></label></div>
+    <div class="tablewrap"><table class="list"><thead><tr><th class="need3"></th><th>Employee</th><th class="n">Highest VL</th><th class="n">VL taken</th><th class="n">To deduct</th><th>Posted</th></tr></thead><tbody id="fdBody"></tbody></table></div>
+    <label class="f need3" style="margin-top:12px">Reason for those not charged<input id="fdWhy" placeholder="Scheduled leave cancelled by the Chief for the exigency of the service"></label></div>
+  <div class="df"><span class="msg" id="fdMsg" role="status"></span><button class="btn ghost" type="button" data-close>Close</button><button class="btn need3" id="fdPost">Deduct the forced leave not taken</button></div>
+</dialog>
+
+<!-- signatory -->
+<dialog id="sgDlg" class="small"><form id="sgForm" method="dialog">
+  <div class="dh"><h3 id="sgH">Add a signatory</h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
+  <div class="db"><div class="grid" style="grid-template-columns:1fr">
+    <label class="f"><span class="req">Name as printed on the form</span><input id="sgName" required></label>
+    <label class="f">Position<input id="sgPos" placeholder="for example Chief of Hospital III"></label>
+    <div><span class="f" style="font-size:14px;font-weight:600;color:var(--head)">Signs</span><div class="choice col" id="sgFor"></div></div>
+    <label class="f">Status<select id="sgSt"><option>Active</option><option>Inactive</option></select></label>
+  </div></div>
+  <div class="df"><span class="msg" id="sgMsg" role="status"></span><button class="btn ghost" type="button" data-close>Cancel</button><button class="btn" id="sgSave" type="submit">Save</button></div>
+</form></dialog>
+
 <div id="printArea"></div>
 
 <script>%%QRCODE_LIB%%</script>
@@ -493,10 +709,15 @@ const BOOT_T = /*BOOT*/"";
 const HEADER_BLACK = "%%HEADER_BLACK%%";   // the official header for printouts
 const SEAL_DOH = "%%LOGO_DOH_ROUND%%";
 const SEAL_TRC = "%%LOGO_TRC_ROUND%%";
+const LOGO_BP = "%%LOGO_BP%%";   // Bagong Pilipinas, on CS Form No. 6
 const WALLPAPER = "%%WALLPAPER%%";
-const APP_VERSION = "1.0.2";
+const APP_VERSION = "1.1.0";
 // The changelog, newest first. Shown under "What's new".
 const CHANGES = [
+  ["1.1.0", "Oct 30, 2026", ["The app is now the HRDU System, with a second module: Leave cards.",
+    "Each employee's leave card under the CSC Omnibus Rules on Leave: 1.25 days of VL and SL earned every month, less 1/30 for each day without pay; tardiness and undertime charged to VL with the CSC conversion table; sick leave going to VL when SL runs out; special privilege leave up to 3 days a year; monetization with the 0.0481927 factor; forced leave not taken deducted at year end; a terminal leave estimate.",
+    "Leave applications on CS Form No. 6 (Revised 2020), printed on long bond paper like HRDU's own sheet, with drop-down lists for who certifies, recommends and approves (Signatories, on the Accounts page). An approved application goes on the leave card.",
+    "Employees get their own sign-in. They see only their own leave card, apply for leave, and print their application. HRDU can make accounts for everyone at once and print the password slips."]],
   ["1.0.2", "Oct 29, 2026", ["The app also opens from GitHub Pages (trcdulag.github.io/hrdu-training-evaluation). The participants' links and QR codes now point there, so they open even on a browser signed in to several Google accounts."]],
   ["1.0.1", "Oct 29, 2026", ["The top role is now called Administrator, and the first account made with the setup passcode is the Administrator."]],
   ["1.0.0", "Oct 29, 2026", ["First version: the Training Evaluation Tool (Level 1) on the participant's phone, typing in paper forms, the summary per training, the yearly report, and HRDU accounts."]]
@@ -514,7 +735,7 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 const MONTHS_LONG = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const WORD = { E: "Excellent", VS: "Very Satisfactory", S: "Satisfactory", P: "Poor" };
 const POINTS = { E: 4, VS: 3, S: 2, P: 1 };
-const RANK = { Viewer: 1, Staff: 2, Administrator: 3 };
+const RANK = { Employee: 0, Viewer: 1, Staff: 2, Administrator: 3 };
 
 let TOKEN = store.get("token") || "";
 let ME = null;
@@ -773,6 +994,11 @@ $("codeIn").oninput = () => $("codeIn").setCustomValidity("");
 $("lockVer").onclick = showNew;
 async function startApp() {
   msg("lockMsg", "Opening…");
+  const m = await api({ action: "me" });
+  if (!m.ok) { if (m.signIn) { TOKEN = ""; store.set("token", ""); lockPane("sign"); } msg("lockMsg", m.error, "err"); return; }
+  ME = m.me;
+  if (ME.mustChange) { lockPane("chg"); msg("lockMsg", ""); return; }
+  if (ME.role === "Employee") return openSelfApp();
   const j = await api({ action: "load" });
   if (!j.ok) { if (j.signIn) { TOKEN = ""; store.set("token", ""); lockPane("sign"); } msg("lockMsg", j.error, "err"); return; }
   msg("lockMsg", "");
@@ -787,7 +1013,7 @@ function signedOut(why) {
 // ======================================================================
 //  HRDU app
 // ======================================================================
-const VIEWS = ["home", "tr", "rep", "acc"];
+const VIEWS = ["home", "tr", "rep", "acc", "lv", "apps", "card"];
 function openApp(j) {
   take(j);
   setMe(j.me || ME);
@@ -802,7 +1028,8 @@ function take(j) {
 }
 function setMe(me) {
   ME = me;
-  document.body.classList.remove("r1", "r2", "r3"); document.body.classList.add("r" + (RANK[me.role] || 1));
+  document.body.classList.remove("r0", "r1", "r2", "r3"); document.body.classList.add("r" + (RANK[me.role] == null ? 0 : RANK[me.role]));
+  document.body.classList.toggle("hasEmp", !!me.empNo);
   $("meAv").textContent = me.name.split(/\s+/).filter(w => /^[A-Za-z]/.test(w) && !/^[A-Z]\.?$/.test(w)).map(w => w[0]).join("").slice(0, 2).toUpperCase() || "HR";
   $("meName").textContent = me.name.split(/\s+/)[0]; $("meRoleS").textContent = me.role;
   $("meName2").textContent = me.name; $("meRole").textContent = me.role + (me.position ? ", " + me.position : "");
@@ -845,9 +1072,11 @@ function showNew() {
 document.querySelectorAll("[data-close]").forEach(b => b.onclick = () => b.closest("dialog").close());
 
 function show(v) {
-  document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.v === v || (v === "tr" && b.dataset.v === "home") ? "true" : "false"));
+  if (v === "my") return openSelf();
   document.querySelectorAll("section.view").forEach(s => s.classList.toggle("hidden", s.id !== "v-" + v));
+  document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.v === v || (v === "tr" && b.dataset.v === "home") || (v === "card" && b.dataset.v === (CARD_SELF ? "my" : "lv")) ? "true" : "false"));
   if (v === "acc") loadUsers();
+  if (v === "lv" || v === "apps") loadLeave();
   window.scrollTo(0, 0);
 }
 document.querySelectorAll("nav.tabs button").forEach(b => b.onclick = () => show(b.dataset.v));
@@ -1183,14 +1412,14 @@ $("rCsv").onclick = () => {
 // ---------- accounts (Administrator) ----------
 let USERS = [];
 async function loadUsers() {
-  renderBackup();
+  renderBackup(); loadSigners();
   $("aBody").innerHTML = `<tr><td colspan="5" class="empty">Loading…</td></tr>`;
   try { const j = await api({ action: "listUsers" }); if (j.ok) { USERS = j.users; renderUsers(); } else $("aBody").innerHTML = `<tr><td colspan="5" class="empty">${esc(j.error)}</td></tr>`; }
   catch (e) { $("aBody").innerHTML = `<tr><td colspan="5" class="empty">${esc(errText(e))}</td></tr>`; }
 }
 function renderBackup() { $("aBackup").innerHTML = D.backup.last ? `Last backup of the Sheet: ${esc(D.backup.last)}${D.backup.url ? ` (<a href="${esc(D.backup.url)}" target="_blank" rel="noopener">open</a>)` : ""}. A copy is made on the 1st of every month.` : "No backup yet. A copy of the Sheet is made on the 1st of every month, or use Back up the Sheet now in the menu."; }
 function renderUsers() {
-  $("aBody").innerHTML = USERS.map(u => `<tr data-u="${esc(u.username)}"><td><b>${esc(u.fullName)}</b><div class="s">${esc(u.position)}</div></td><td>${esc(u.username)}</td><td>${esc(u.role)}</td>
+  $("aBody").innerHTML = USERS.filter(u => u.role !== "Employee").map(u => `<tr data-u="${esc(u.username)}"><td><b>${esc(u.fullName)}</b><div class="s">${esc(u.position)}</div></td><td>${esc(u.username)}</td><td>${esc(u.role)}</td>
     <td class="hide-m s">${esc(u.lastSignIn) || "Never"}</td><td>${u.status === "Active" ? `<span class="chip ok">Active</span>` : `<span class="chip mute">Disabled</span>`}${u.mustChange ? ` <span class="s">temporary password</span>` : ""}</td></tr>`).join("");
   $("aBody").querySelectorAll("tr[data-u]").forEach(tr => tr.onclick = () => openUser(USERS.find(u => u.username === tr.dataset.u)));
 }
@@ -1198,7 +1427,7 @@ function openUser(u) {
   const isNew = !u; u = u || { fullName: "", position: "", username: "", role: "Staff", status: "Active" };
   $("usH").textContent = isNew ? "Add an account" : "Account of " + u.fullName;
   $("usName").value = u.fullName; $("usPos").value = u.position; $("usUser").value = u.username; $("usUser").readOnly = !isNew;
-  $("usRole").value = u.role; $("usStatus").value = u.status; $("usReset").checked = false;
+  $("usRole").value = u.role; $("usStatus").value = u.status; $("usReset").checked = false; $("usEmp").value = u.empNo || "";
   $("usStWrap").classList.toggle("hidden", isNew); $("usResetWrap").classList.toggle("hidden", isNew);
   $("usTemp").classList.add("hidden"); $("usForm").dataset.isNew = isNew ? "1" : ""; msg("usMsg", ""); $("usSave").classList.remove("hidden");
   $("usDlg").showModal();
@@ -1207,7 +1436,7 @@ $("aAdd").onclick = () => openUser(null);
 $("usForm").onsubmit = async e => {
   e.preventDefault();
   const isNew = !!$("usForm").dataset.isNew;
-  const user = { isNew, username: $("usUser").value, fullName: $("usName").value, position: $("usPos").value, role: $("usRole").value };
+  const user = { isNew, username: $("usUser").value, fullName: $("usName").value, position: $("usPos").value, role: $("usRole").value, empNo: $("usEmp").value };
   if (!isNew) { user.status = $("usStatus").value; user.resetPassword = $("usReset").checked; }
   $("usSave").disabled = true; msg("usMsg", "Saving…");
   try {
@@ -1220,6 +1449,581 @@ $("usForm").onsubmit = async e => {
     } else setTimeout(() => $("usDlg").close(), 700);
   } catch (err) { msg("usMsg", errText(err), "err"); }
   finally { $("usSave").disabled = false; }
+};
+
+// ======================================================================
+//  Leave cards (CSC Omnibus Rules on Leave) and leave applications (CS Form No. 6)
+// ======================================================================
+let LV = null;          // the list of employees, applications waiting, signatories
+let CARD = null;        // the leave card open now
+let CARD_SELF = false;  // true when it is the signed-in person's own card
+const CF = 0.0481927;   // CSC MC No. 2, s. 2016
+const n3 = v => v == null || v === "" || isNaN(v) ? "" : (+v).toFixed(3);
+const nz = v => +v ? n3(v) : "";
+const dz = v => String(+(+v || 0).toFixed(3));
+const peso = v => "₱" + (+v || 0).toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const longDate = s => { const d = parse(s); return d ? MONTHS_LONG[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear() : ""; };
+const monthLabel = ym => ym ? MONTHS_LONG[+ym.slice(5, 7) - 1] + " " + ym.slice(0, 4) : "";
+// CSC table: minutes as a fraction of an 8-hour day (a half rounds down, as printed: 30 minutes = .062).
+function minutesToDays(min) {
+  min = Math.max(0, Math.round(+min || 0)); const m = min % 60, q = m * 25;
+  return Math.round((Math.floor(min / 60) * 0.125 + (Math.floor(q / 12) + (q % 12 * 2 > 12 ? 1 : 0)) / 1000) * 1000) / 1000;
+}
+// Monday to Friday between two dates (holidays are taken out by hand).
+function workdays(a, b) {
+  const x = parse(a), y = parse(b) || x; if (!x || y < x) return 0;
+  let n = 0; for (const d = new Date(x); d <= y; d.setDate(d.getDate() + 1)) if (d.getDay() % 6) n++;
+  return n;
+}
+function signerOpts(role, pick) {
+  const list = ((CARD && CARD.signers) || (LV && LV.signers) || []).filter(x => x.status === "Active" && x.signsFor.includes(role));
+  return `<option value="">${list.length ? "Pick a name" : "No signatories yet (Accounts page)"}</option>` + list.map(x => `<option value="${esc(x.name)}"${x.name === pick ? " selected" : ""}>${esc(x.name)}${x.position ? ", " + esc(x.position) : ""}</option>`).join("");
+}
+const signer = name => ((CARD && CARD.signers) || (LV && LV.signers) || []).find(x => x.name === name);
+const appChip = st => `<span class="chip ${st === "Approved" ? "ok" : st === "Filed" ? "" : st === "Disapproved" ? "bad" : "mute"}">${st === "Filed" ? "Waiting for action" : esc(st)}</span>`;
+
+// ---------- the list of employees ----------
+async function loadLeave() {
+  try {
+    const j = await api({ action: "leaveLoad" });
+    if (!j.ok) { $("lvBody").innerHTML = `<tr><td colspan="6" class="empty">${esc(j.error)}</td></tr>`; return; }
+    takeLeave(j);
+  } catch (e) { $("lvBody").innerHTML = `<tr><td colspan="6" class="empty">${esc(errText(e))}</td></tr>`; }
+}
+function takeLeave(j) {
+  LV = j;
+  const offices = [...new Set(j.employees.map(e => e.office).filter(Boolean))].sort();
+  const v = $("lvOffice").value;
+  $("lvOffice").innerHTML = `<option value="">All</option>` + offices.map(o => `<option>${esc(o)}</option>`).join(""); $("lvOffice").value = offices.includes(v) ? v : "";
+  $("emOffList").innerHTML = offices.map(o => `<option>${esc(o)}</option>`).join("");
+  $("navPend").textContent = j.pending.length; $("navPend").classList.toggle("hidden", !j.pending.length);
+  renderLeave(); renderApps();
+}
+function renderLeave() {
+  if (!LV) return;
+  const q = $("lvQ").value.trim().toLowerCase(), off = $("lvOffice").value, st = $("lvStatus").value;
+  const act = LV.employees.filter(e => e.status === "Active");
+  $("lvTiles").innerHTML = `<div class="tile"><div class="lb">Employees (active)</div><div class="val">${act.length}</div></div>
+    <div class="tile"><div class="lb">Credits earned through</div><div class="val" style="font-size:22px">${esc(monthLabel(LV.through))}</div><div class="sm">credited at the end of each month</div></div>
+    <div class="tile"><div class="lb">Applications waiting</div><div class="val">${LV.pending.length}</div></div>
+    <div class="tile"><div class="lb">With a sign-in account</div><div class="val">${act.filter(e => e.account).length}</div><div class="sm">of ${act.length}</div></div>`;
+  const list = LV.employees.filter(e => (!st || e.status === st) && (!off || e.office === off) &&
+    (!q || [e.empNo, e.name, e.position, e.office].join(" ").toLowerCase().includes(q))).sort((a, b) => a.name.localeCompare(b.name));
+  $("lvBody").innerHTML = list.map(e => `<tr data-e="${esc(e.empNo)}"><td class="s">${esc(e.empNo)}</td><td><b>${esc(e.name)}</b><div class="s">${esc(e.position)}${e.status === "Separated" ? " · separated" : ""}</div></td>
+    <td class="hide-m s">${esc(e.office)}</td><td class="n">${n3(e.vl)}</td><td class="n">${n3(e.sl)}</td>
+    <td class="hide-m">${e.account ? `<span class="chip ok">${esc(e.account)}</span>` : `<span class="s">None</span>`}${e.pending ? ` <span class="chip">${e.pending} waiting</span>` : ""}</td></tr>`).join("")
+    || `<tr><td colspan="6" class="empty">${LV.employees.length ? "No employee matches." : "No employees yet. Add the first one below."}</td></tr>`;
+  $("lvBody").querySelectorAll("tr[data-e]").forEach(tr => tr.onclick = () => openCard(tr.dataset.e));
+}
+["lvQ", "lvOffice", "lvStatus"].forEach(id => $(id).addEventListener("input", renderLeave));
+$("lvCsv").onclick = () => {
+  if (!LV) return;
+  download("Leave balances " + LV.through + ".csv", csv([["Employee No.", "Name", "Position", "Office / Unit", "Status of Appointment", "Status", "VL Balance", "SL Balance", "Total", "Credits Through"]]
+    .concat(LV.employees.map(e => [e.empNo, e.name, e.position, e.office, e.appointment, e.status, n3(e.vl), n3(e.sl), n3(e.vl + e.sl), monthLabel(LV.through)]))));
+};
+
+// ---------- applications waiting ----------
+function renderApps() {
+  if (!LV) return;
+  $("apBody").innerHTML = LV.pending.map(a => `<tr data-a="${esc(a.no)}" data-e="${esc(a.empNo)}"><td class="s">${esc(a.no)}</td><td><b>${esc(a.name)}</b></td><td>${esc(a.type === "Others" ? (a.details || a.othersSpecify) : a.type)}</td>
+    <td class="hide-m s">${esc(a.dates)}</td><td class="n">${dz(a.days)}</td><td class="hide-m s">${esc(longDate(a.filed))}</td></tr>`).join("")
+    || `<tr><td colspan="6" class="empty">No application is waiting.</td></tr>`;
+  $("apBody").querySelectorAll("tr[data-a]").forEach(tr => tr.onclick = async () => { await openCard(tr.dataset.e, true); openAppView(tr.dataset.a); });
+}
+$("apNew").onclick = () => openApply(true);
+
+// ---------- one employee's leave card ----------
+async function openCard(empNo, stay) {
+  try {
+    const j = await api({ action: "leaveCard", empNo });
+    if (!j.ok) return alert(j.error);
+    CARD_SELF = false; takeCard(j);
+    if (!stay) show("card"); else { show("card"); }
+  } catch (e) { alert(errText(e)); }
+}
+async function openSelf() {
+  try {
+    const j = await api({ action: "myLeave" });
+    if (!j.ok) return alert(j.error);
+    CARD_SELF = true; takeCard(j);
+    document.querySelectorAll("section.view").forEach(s => s.classList.toggle("hidden", s.id !== "v-card"));
+    document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.v === "my" ? "true" : "false"));
+    window.scrollTo(0, 0);
+  } catch (e) { alert(errText(e)); }
+}
+// An employee account: the app shows only the person's own leave card.
+async function openSelfApp() {
+  setMe(ME);
+  $("lock").classList.add("hidden"); $("pub").classList.add("hidden"); $("app").classList.remove("hidden");
+  msg("lockMsg", "");
+  await openSelf();
+}
+function takeCard(j) {
+  CARD = j;
+  const y0 = (j.employee.cardStart || j.today).slice(0, 4), y1 = j.today.slice(0, 4), v = $("cYear").value;
+  const ys = []; for (let y = +y1; y >= +y0; y--) ys.push(String(y));
+  $("cYear").innerHTML = ys.map(y => `<option>${y}</option>`).join(""); $("cYear").value = ys.includes(v) ? v : y1;
+  renderCard();
+  if (LV && !CARD_SELF) { const e = LV.employees.find(x => x.empNo === j.employee.empNo); if (e) { e.vl = j.vl; e.sl = j.sl; } }
+}
+function renderCard() {
+  const c = CARD, e = c.employee, y = c.today.slice(0, 4), Y = c.years[y] || {};
+  $("v-card").classList.toggle("self", CARD_SELF);
+  $("cTitle").textContent = CARD_SELF ? "My leave card" : e.name;
+  $("cMeta").textContent = [CARD_SELF ? e.name : "", e.empNo, e.position, e.office, e.appointment, e.appointed ? "in the service since " + longDate(e.appointed) : "",
+    e.status === "Separated" ? "separated " + longDate(e.separated) : ""].filter(Boolean).join(" · ");
+  $("cApply").classList.toggle("hidden", e.status !== "Active");
+  const total = c.vl + c.sl, tl = (e.highest || e.salary) * total * CF;
+  const forced = Y.maxVl >= 10 ? (Y.vlTaken >= 5 ? "Done" : dz(Y.vlTaken) + " of 5") : "Not required";
+  $("cTiles").innerHTML = `<div class="tile"><div class="lb">Vacation leave</div><div class="val">${n3(c.vl)}</div><div class="sm">as of ${esc(longDate(lastDay(c.through)))}</div></div>
+    <div class="tile"><div class="lb">Sick leave</div><div class="val">${n3(c.sl)}</div><div class="sm">as of ${esc(longDate(lastDay(c.through)))}</div></div>
+    <div class="tile"><div class="lb">Special privilege leave ${y}</div><div class="val">${dz(Y.spl)} <span style="font-size:16px;color:var(--muted)">of 3</span></div><div class="sm">does not carry over</div></div>
+    <div class="tile${Y.maxVl >= 10 && Y.vlTaken < 5 ? " warn" : ""}"><div class="lb">Forced leave ${y}</div><div class="val" style="font-size:24px">${forced}</div><div class="sm">${Y.maxVl >= 10 ? "5 days of VL to take before Dec 31" : "fewer than 10 days of VL"}</div></div>
+    ${e.highest || e.salary ? `<div class="tile"><div class="lb">Terminal leave, if separated now</div><div class="val" style="font-size:22px">${peso(tl)}</div><div class="sm">${esc(peso(e.highest || e.salary))} × ${n3(total)} days × ${CF}</div></div>` : ""}
+    ${Y.habitual ? `<div class="tile warn"><div class="lb">Times late</div><div class="val" style="font-size:20px">Habitual</div><div class="sm">10 or more times in ${Y.lateMonths.map(monthLabel).join(", ")}</div></div>` : ""}`;
+  $("cApps").innerHTML = c.apps.map(a => `<tr data-a="${esc(a.no)}"><td class="s">${esc(a.no)}</td><td>${esc(a.type === "Others" ? (a.details || a.othersSpecify) : a.type)}</td>
+    <td class="hide-m s">${esc(a.dates)}</td><td class="n">${dz(a.days)}</td><td>${appChip(a.status)}</td></tr>`).join("") || `<tr><td colspan="5" class="empty">No applications${CARD_SELF ? " yet. Use Apply for leave above." : "."}</td></tr>`;
+  $("cApps").querySelectorAll("tr[data-a]").forEach(tr => tr.onclick = () => openAppView(tr.dataset.a));
+  renderCardRows();
+}
+function lastDay(ym) { if (!ym) return ""; const d = new Date(+ym.slice(0, 4), +ym.slice(5, 7), 0); return isoDate(d); }
+function yearRowsOf(y) {
+  let prev = null; const out = [];
+  CARD.rows.forEach(r => { const ry = r.date.slice(0, 4); if (ry < y) prev = r; else if (ry === y) out.push(r); });
+  return { prev, out };
+}
+function periodOf(r) { return r.kind === "Earned" || r.kind === "Tardiness/Undertime" ? monthLabel(r.period) : dateRange(r.period, r.to); }
+function renderCardRows() {
+  const y = $("cYear").value, { prev, out } = yearRowsOf(y);
+  $("cSub").textContent = "earned credits through " + monthLabel(CARD.through);
+  const tr = r => `<tr class="${r.kind === "Earned" ? "earned" : ""}"${r.no ? ` data-n="${esc(r.no)}"` : ""}><td class="s" style="white-space:nowrap">${esc(periodOf(r))}</td><td>${esc(r.particulars)}</td>
+    <td class="n bl">${nz(r.vlEarned)}</td><td class="n">${nz(r.vlWP)}</td><td class="n bal">${n3(r.vlBal)}</td><td class="n">${nz(r.vlWOP)}</td>
+    <td class="n bl">${nz(r.slEarned)}</td><td class="n">${nz(r.slWP)}</td><td class="n bal">${n3(r.slBal)}</td><td class="n">${nz(r.slWOP)}</td><td class="hide-m s">${esc(r.action)}</td></tr>`;
+  $("cBody").innerHTML = (prev ? `<tr class="fwd"><td>${+y - 1}</td><td>Balance brought forward</td><td class="bl"></td><td></td><td class="n">${n3(prev.vlBal)}</td><td></td><td class="bl"></td><td></td><td class="n">${n3(prev.slBal)}</td><td></td><td class="hide-m"></td></tr>` : "")
+    + out.map(tr).join("") || `<tr><td colspan="11" class="empty">Nothing on the card for ${esc(y)}.</td></tr>`;
+  $("cBody").querySelectorAll("tr[data-n]").forEach(t => t.onclick = () => openLine(t.dataset.n));
+  $("cBody").classList.toggle("click", !CARD_SELF);
+}
+$("cYear").addEventListener("input", renderCardRows);
+
+// ---------- add or edit an employee ----------
+function openEmp(e) {
+  const isNew = !e;
+  e = e || { empNo: "", last: "", first: "", middle: "", position: "", office: "", appointment: "Permanent", appointed: "", cardStart: D.today.slice(0, 7) + "-01", salary: "", highest: "", status: "Active", separated: "", remarks: "" };
+  $("emH").textContent = isNew ? "Add an employee" : "Edit " + e.name;
+  $("emAppt").innerHTML = (LV || CARD).form.appointments.map(a => `<option>${a}</option>`).join("");
+  $("emNo").value = e.empNo; $("emNo").readOnly = !isNew; $("emAppt").value = e.appointment; $("emLast").value = e.last; $("emFirst").value = e.first; $("emMid").value = e.middle;
+  $("emPos").value = e.position; $("emOff").value = e.office; $("emAppd").value = e.appointed; $("emStart").value = e.cardStart;
+  $("emSal").value = e.salary || ""; $("emHigh").value = e.highest || ""; $("emSt").value = e.status; $("emSep").value = e.separated; $("emRem").value = e.remarks;
+  $("emVl").value = ""; $("emSl").value = "";
+  $("emBalWrap").classList.toggle("hidden", !isNew); $("emStWrap").classList.toggle("hidden", isNew); $("emSepWrap").classList.toggle("hidden", isNew || e.status !== "Separated");
+  $("emForm").dataset.isNew = isNew ? "1" : ""; msg("emMsg", "");
+  $("emDlg").showModal(); (isNew ? $("emNo") : $("emLast")).focus();
+}
+$("emSt").oninput = () => $("emSepWrap").classList.toggle("hidden", $("emSt").value !== "Separated");
+$("lvAdd").onclick = async () => { if (!LV) await loadLeave(); openEmp(null); };
+$("cEdit").onclick = () => openEmp(CARD.employee);
+$("emForm").onsubmit = async ev => {
+  ev.preventDefault();
+  const isNew = !!$("emForm").dataset.isNew;
+  const employee = { isNew, empNo: $("emNo").value, last: $("emLast").value, first: $("emFirst").value, middle: $("emMid").value, position: $("emPos").value,
+    office: $("emOff").value, appointment: $("emAppt").value, appointed: $("emAppd").value, cardStart: $("emStart").value, salary: $("emSal").value,
+    highest: $("emHigh").value, status: $("emSt").value, separated: $("emSep").value, remarks: $("emRem").value };
+  if (isNew) { employee.vl = $("emVl").value; employee.sl = $("emSl").value; }
+  $("emSave").disabled = true; msg("emMsg", "Saving…");
+  try {
+    const j = await api({ action: "saveEmployee", employee });
+    if (!j.ok) { msg("emMsg", j.error, "err"); return; }
+    takeLeave(j); $("emDlg").close(); openCard(j.empNo);
+  } catch (err) { msg("emMsg", errText(err), "err"); }
+  finally { $("emSave").disabled = false; }
+};
+
+// ---------- record something on the leave card ----------
+const fld = (id, label, input, cls) => `<label class="f${cls ? " " + cls : ""}">${label}${input}</label>`;
+function openEntry(kind) {
+  const F = CARD.form, t = D.today, M = t.slice(0, 7);
+  const typeSel = `<select id="enType">${F.types.filter(x => x.name !== "Others").map(x => `<option>${esc(x.name)}</option>`).join("")}</select>`;
+  const dates = fld("", "From", `<input id="enFrom" type="date" value="${t}">`) + fld("", "To", `<input id="enTo" type="date" value="${t}">`);
+  const body = {
+    "Leave": fld("", "Type of leave", typeSel, "wide") + dates + fld("", "Working days", `<input id="enDays" type="number" step="0.5" min="0" value="1">`) +
+      `<label class="cb" style="align-self:end"><input type="checkbox" id="enWop">Without pay</label>` + fld("", "Action taken", `<input id="enAct" placeholder="Approved, date">`, "wide"),
+    "Tardiness/Undertime": fld("", "Month", `<input id="enMonth" type="month" value="${esc(prevMonth(M))}">`) + fld("", "Times late", `<input id="enTimes" type="number" min="0" value="0">`) +
+      fld("", "Total minutes late", `<input id="enLate" type="number" min="0" value="0">`) + fld("", "Total minutes undertime", `<input id="enUnder" type="number" min="0" value="0">`),
+    "Absence without pay": dates + fld("", "Working days", `<input id="enDays" type="number" step="0.5" min="0" value="1">`) + fld("", "Note", `<input id="enNote" placeholder="for example no leave filed">`),
+    "Monetization": fld("", "Date", `<input id="enFrom" type="date" value="${t}">`) + fld("", "Days", `<input id="enDays" type="number" step="0.5" min="0" value="10">`) +
+      `<label class="cb wide"><input type="checkbox" id="enSpecial">50% or more, for a valid reason (Section 23)</label>` + fld("", "Reason", `<input id="enReason">`, "wide"),
+    "Adjustment": fld("", "Date", `<input id="enFrom" type="date" value="${t}">`) + `<span></span>` + fld("", "VL to add (negative to take away)", `<input id="enVl" type="number" step="0.001" value="0">`) +
+      fld("", "SL to add (negative to take away)", `<input id="enSl" type="number" step="0.001" value="0">`) + fld("", "Reason", `<input id="enReason" required>`, "wide")
+  }[kind];
+  $("enH").textContent = kind === "Leave" ? "Record leave" : kind;
+  $("enBody").innerHTML = body; $("enForm").dataset.kind = kind; msg("enMsg", "");
+  const e = CARD.employee;
+  const hint = () => {
+    let h = "";
+    if (kind === "Tardiness/Undertime") { const m = (+$("enLate").value || 0) + (+$("enUnder").value || 0); h = m + " minutes = " + n3(minutesToDays(m)) + " day, charged to VL." + ((+$("enTimes").value || 0) >= 10 ? " 10 or more times late in a month counts toward habitual tardiness." : ""); }
+    if (kind === "Monetization") { const d = +$("enDays").value || 0; h = e.salary ? `${peso(e.salary)} × ${dz(d)} days × ${CF} = ${peso(e.salary * d * CF)}. Needs at least 15 days of VL and leaves at least 5; 10 to 30 days a year.` : "Put in the monthly salary first (Edit)."; }
+    if (kind === "Leave") h = "Used for leaves taken before the app, or not filed through CS Form No. 6. VL and forced leave come out of VL; sick leave out of SL, then VL; days beyond the balance are without pay.";
+    if (kind === "Absence without pay") h = "Lowers what that month earns: each day takes 0.042 off the 1.25.";
+    $("enHint").textContent = h;
+  };
+  $("enBody").oninput = ev => { if (ev.target.id === "enFrom" && $("enTo")) { if ($("enTo").value < $("enFrom").value) $("enTo").value = $("enFrom").value; }
+    if ((ev.target.id === "enFrom" || ev.target.id === "enTo") && $("enDays") && kind !== "Monetization") $("enDays").value = workdays($("enFrom").value, $("enTo").value) || $("enDays").value;
+    hint(); };
+  hint(); $("enDlg").showModal();
+}
+function prevMonth(ym) { let y = +ym.slice(0, 4), m = +ym.slice(5, 7) - 1; if (m < 1) { m = 12; y--; } return y + "-" + String(m).padStart(2, "0"); }
+document.querySelectorAll("[data-kind]").forEach(b => b.onclick = () => openEntry(b.dataset.kind));
+$("enForm").onsubmit = async ev => {
+  ev.preventDefault();
+  const kind = $("enForm").dataset.kind, v = id => $(id) ? $(id).value : undefined;
+  const entry = { empNo: CARD.employee.empNo, kind, type: v("enType"), from: v("enFrom"), to: v("enTo"), days: v("enDays"), withoutPay: $("enWop") && $("enWop").checked,
+    action: v("enAct"), month: v("enMonth"), times: v("enTimes"), late: v("enLate"), under: v("enUnder"), note: v("enNote"),
+    special: $("enSpecial") && $("enSpecial").checked, reason: v("enReason"), vlAdd: v("enVl"), slAdd: v("enSl") };
+  $("enSave").disabled = true; msg("enMsg", "Saving…");
+  try {
+    const j = await api({ action: "saveEntry", entry });
+    if (!j.ok) { msg("enMsg", j.error, "err"); return; }
+    takeCard(j); $("enDlg").close();
+  } catch (err) { msg("enMsg", errText(err), "err"); }
+  finally { $("enSave").disabled = false; }
+};
+
+// ---------- one line of the card ----------
+let LINE = null;
+function openLine(no) {
+  if (CARD_SELF) return;
+  const r = CARD.rows.find(x => x.no === no); if (!r) return; LINE = r;
+  $("liH").textContent = r.kind + " · " + r.no;
+  $("liBody").innerHTML = `<dl class="kv"><dt>Period</dt><dd>${esc(periodOf(r))}</dd><dt>Particulars</dt><dd>${esc(r.particulars)}</dd>
+    ${r.vlEarned ? `<dt>VL added</dt><dd>${n3(r.vlEarned)}</dd>` : ""}${r.slEarned ? `<dt>SL added</dt><dd>${n3(r.slEarned)}</dd>` : ""}
+    ${r.vlWP ? `<dt>VL with pay</dt><dd>${n3(r.vlWP)}</dd>` : ""}${r.vlWOP ? `<dt>VL without pay</dt><dd>${n3(r.vlWOP)}</dd>` : ""}
+    ${r.slWP ? `<dt>SL with pay</dt><dd>${n3(r.slWP)}</dd>` : ""}${r.slWOP ? `<dt>SL without pay</dt><dd>${n3(r.slWOP)}</dd>` : ""}
+    ${r.amount ? `<dt>Amount</dt><dd>${peso(r.amount)}</dd>` : ""}${r.action ? `<dt>Action taken</dt><dd>${esc(r.action)}</dd>` : ""}
+    ${r.by ? `<dt>Encoded by</dt><dd>${esc(r.by)}</dd>` : ""}</dl><p class="hint">A wrong line is voided by the Administrator with a reason. It stays in the Sheet and is no longer counted.</p>`;
+  msg("liMsg", ""); $("liDlg").showModal();
+}
+$("liVoid").onclick = async () => {
+  const why = prompt("Why void " + LINE.no + "? For example: typed twice, wrong employee.");
+  if (!why || !why.trim()) return;
+  try { const j = await api({ action: "voidEntry", no: LINE.no, reason: why }); if (!j.ok) { msg("liMsg", j.error, "err"); return; } takeCard(j); $("liDlg").close(); }
+  catch (e) { msg("liMsg", errText(e), "err"); }
+};
+
+// ---------- file an application (part 6 of CS Form No. 6) ----------
+function openApply(paper) {
+  const F = (CARD || LV).form;
+  const staffSide = !CARD_SELF;
+  $("laH").textContent = staffSide ? "Type in a leave application (CS Form No. 6)" : "Apply for leave (CS Form No. 6)";
+  $("laEmpWrap").classList.toggle("hidden", !staffSide);
+  if (staffSide) {
+    const list = (LV ? LV.employees : [CARD.employee]).filter(e => e.status === "Active").sort((a, b) => a.name.localeCompare(b.name));
+    $("laEmp").innerHTML = list.map(e => `<option value="${esc(e.empNo)}">${esc(e.name)} (${esc(e.empNo)})</option>`).join("");
+    if (CARD && !paper) $("laEmp").value = CARD.employee.empNo;
+  }
+  $("laFiled").value = D.today || isoDate(new Date());
+  $("laType").innerHTML = F.types.map(t => `<option value="${esc(t.name)}">${esc(t.name)}${t.basis ? " (" + esc(t.basis) + ")" : ""}</option>`).join("");
+  $("laOth").value = ""; $("laSpec").value = ""; $("laFrom").value = ""; $("laTo").value = ""; $("laDays").value = "";
+  $("laCom").querySelector("input[value='Not Requested']").checked = true;
+  $("laRec").innerHTML = signerOpts("Recommendation");
+  laTypeChanged(); msg("laMsg", "");
+  $("laDlg").showModal();
+}
+function laTypeChanged() {
+  const F = (CARD || LV).form, t = $("laType").value, g = F.details.find(x => x.types.includes(t));
+  $("laOthWrap").classList.toggle("hidden", t !== "Others");
+  $("laDetWrap").classList.toggle("hidden", !g);
+  $("laDetHead").textContent = g ? g.head + ":" : "";
+  $("laDet").innerHTML = g ? g.options.map((o, i) => `<label><input type="radio" name="laDet" value="${esc(o)}"${i === 0 && t !== "Others" ? " checked" : ""}>${esc(o.replace(/\s*\(Specify.*\)/, "") || "Specify illness")}</label>`).join("") : "";
+  laDetChanged();
+  const tl = t === "Others";
+  $("laHint").textContent = { "Vacation Leave": "File 5 days ahead when possible.", "Mandatory/Forced Leave": "Counts toward the 5 days of forced leave this year.",
+    "Sick Leave": "File right after returning to work. More than 5 days needs a medical certificate.", "Special Privilege Leave": "Up to 3 days a year. Does not come out of VL or SL.",
+    "Maternity Leave": "105 days (R.A. No. 11210).", "Paternity Leave": "7 days for each of the first four deliveries." }[t] || (tl ? "For monetization, put the days to monetize." : "");
+}
+function laDetChanged() {
+  const d = ($("laDet").querySelector("input:checked") || {}).value || "";
+  $("laSpecWrap").classList.toggle("hidden", !/Specify/.test(d));
+  $("laSpecL").textContent = /Abroad/.test(d) ? "Abroad (specify)" : /Illness/.test(d) ? "Illness" : "Specify";
+  const purpose = /Monetization|Terminal/.test(d);
+  $("laFromW").classList.toggle("hidden", purpose); $("laToW").classList.toggle("hidden", purpose);
+}
+$("laType").oninput = laTypeChanged;
+$("laDet").addEventListener("change", laDetChanged);
+["laFrom", "laTo"].forEach(id => $(id).addEventListener("input", () => {
+  if ($("laTo").value < $("laFrom").value) $("laTo").value = $("laFrom").value;
+  const n = workdays($("laFrom").value, $("laTo").value); if (n) $("laDays").value = n;
+}));
+$("cApply").onclick = () => openApply(false);
+$("cApp").onclick = () => openApply(false);
+$("laForm").onsubmit = async ev => {
+  ev.preventDefault();
+  const app = { empNo: CARD_SELF ? "" : $("laEmp").value, filed: $("laFiled").value, type: $("laType").value, othersSpecify: $("laOth").value,
+    details: ($("laDet").querySelector("input:checked") || {}).value || "", specify: $("laSpec").value, from: $("laFrom").value, to: $("laTo").value,
+    days: $("laDays").value, commutation: $("laCom").querySelector("input:checked").value, recommendedBy: $("laRec").value };
+  $("laSave").disabled = true; msg("laMsg", "Sending…");
+  try {
+    const j = await api({ action: "fileLeave", app });
+    if (!j.ok) { msg("laMsg", j.error, "err"); return; }
+    if (!CARD_SELF) { CARD_SELF = false; takeCard(j); show("card"); loadLeave(); } else takeCard(j);
+    $("laDlg").close(); openAppView(j.appNo);
+  } catch (err) { msg("laMsg", errText(err), "err"); }
+  finally { $("laSave").disabled = false; }
+};
+
+// ---------- one application: part 7, the decision, the printout ----------
+let APP = null;
+function openAppView(no) {
+  const a = CARD.apps.find(x => x.no === no); if (!a) return; APP = a;
+  const open = a.status === "Filed";
+  $("acH").textContent = a.no + " · " + (a.type === "Others" ? a.details || a.othersSpecify : a.type);
+  $("acSum").innerHTML = `<dl class="kv"><dt>Employee</dt><dd>${esc(CARD.employee.name)}</dd><dt>Status</dt><dd>${appChip(a.status)}</dd>
+    <dt>Filed</dt><dd>${esc(longDate(a.filed))}${a.filedBy && !CARD_SELF ? ", by " + esc(a.filedBy) : ""}</dd>
+    ${a.details ? `<dt>Details</dt><dd>${esc(a.details.replace(/\s*\(Specify.*\)/, ""))}${a.specify ? ": " + esc(a.specify) : ""}</dd>` : ""}
+    ${a.othersSpecify ? `<dt>Others</dt><dd>${esc(a.othersSpecify)}</dd>` : ""}
+    <dt>Days applied</dt><dd>${dz(a.days)}${a.dates ? ", " + esc(a.dates) : ""}</dd><dt>Commutation</dt><dd>${esc(a.commutation)}</dd>
+    <dt>Credits as of ${esc(longDate(a.cert.asOf))}</dt><dd>VL ${n3(a.cert.vl)}, SL ${n3(a.cert.sl)}. After this application: VL ${n3(a.cert.balVl)}, SL ${n3(a.cert.balSl)}</dd>
+    ${a.status === "Approved" ? `<dt>Approved for</dt><dd>${dz(a.withPay)} days with pay${a.withoutPay ? ", " + dz(a.withoutPay) + " without pay" : ""}${a.othersApproved ? ", " + esc(a.othersApproved) : ""}</dd>` : ""}
+    ${a.status === "Disapproved" ? `<dt>Disapproved due to</dt><dd>${esc(a.disapproved)}</dd>` : ""}</dl>`;
+  const staff = !CARD_SELF && can("Staff");
+  $("acAct").classList.toggle("hidden", !staff || !open);
+  $("acSaveS").classList.toggle("hidden", !staff || !open);
+  $("acCancel").classList.toggle("hidden", !open || (!CARD_SELF && !can("Staff")));
+  if (staff && open) {
+    $("acAsOf").value = a.certAsOf || a.cert.asOf;
+    $("acCert").innerHTML = signerOpts("Certification of leave credits", a.certifiedBy || firstSigner("Certification of leave credits"));
+    $("acRec").innerHTML = signerOpts("Recommendation", a.recommendedBy);
+    $("acApp").innerHTML = signerOpts("Approval", a.approvedBy || firstSigner("Approval"));
+    $("acRecV").value = a.recommendation; $("acRecR").value = a.recReason; $("acRecRW").classList.toggle("hidden", a.recommendation !== "For disapproval");
+    const charge = ((CARD.form.types.find(t => t.name === a.type) || {}).charge) || "";
+    const avail = charge === "VL" ? a.cert.vl : charge === "SL" ? a.cert.sl + a.cert.vl : a.days;
+    $("acWp").value = dz(Math.max(0, Math.min(a.days, avail))); $("acWop").value = dz(Math.max(0, a.days - Math.max(0, Math.min(a.days, avail))));
+    $("acOth").value = ""; $("acDis").value = "";
+  }
+  msg("acMsg", ""); $("acDlg").showModal();
+}
+function firstSigner(role) { const s = ((CARD && CARD.signers) || []).find(x => x.status === "Active" && x.signsFor.includes(role)); return s ? s.name : ""; }
+$("acRecV").oninput = () => $("acRecRW").classList.toggle("hidden", $("acRecV").value !== "For disapproval");
+function acFields() {
+  return { no: APP.no, certAsOf: $("acAsOf").value, certifiedBy: $("acCert").value, recommendedBy: $("acRec").value, approvedBy: $("acApp").value,
+    recommendation: $("acRecV").value, recReason: $("acRecR").value };
+}
+async function acSend(app, done) {
+  msg("acMsg", "Saving…");
+  try {
+    const j = await api({ action: "actOnLeave", app });
+    if (!j.ok) { msg("acMsg", j.error, "err"); return; }
+    takeCard(j); openAppView(APP.no); msg("acMsg", done, "ok");
+    if (LV) loadLeave();
+  } catch (e) { msg("acMsg", errText(e), "err"); }
+}
+$("acSaveS").onclick = () => acSend(acFields(), "Saved. Print the form for signing.");
+$("acApprove").onclick = () => {
+  if (!confirm("Record " + APP.no + " as approved for " + ($("acWp").value || 0) + " days with pay and " + ($("acWop").value || 0) + " without pay? It goes on the leave card.")) return;
+  acSend(Object.assign(acFields(), { decision: "Approved", withPay: $("acWp").value, withoutPay: $("acWop").value, othersApproved: $("acOth").value }), "Approved and put on the leave card.");
+};
+$("acDisapprove").onclick = () => {
+  if (!$("acDis").value.trim()) { msg("acMsg", "Type the reason in 7.D first.", "err"); $("acDis").focus(); return; }
+  acSend(Object.assign(acFields(), { decision: "Disapproved", disapproved: $("acDis").value }), "Recorded as disapproved.");
+};
+$("acCancel").onclick = async () => {
+  if (!confirm("Cancel " + APP.no + "? It stays on record as cancelled.")) return;
+  try {
+    const j = await api({ action: "cancelLeave", no: APP.no });
+    if (!j.ok) { msg("acMsg", j.error, "err"); return; }
+    takeCard(j); $("acDlg").close(); if (LV) loadLeave();
+  } catch (e) { msg("acMsg", errText(e), "err"); }
+};
+$("acPrint").onclick = () => {
+  // What is picked in the drop-downs prints even before it is saved.
+  const a = Object.assign({}, APP);
+  if (!$("acAct").classList.contains("hidden")) Object.assign(a, acFields());
+  doPrint(cs6Html(a, CARD.employee), false, "8.5in 13in");
+};
+
+// CS Form No. 6, Revised 2020, laid out like HRDU's own sheet, on long bond paper.
+function cs6Html(a, e) {
+  const T = CARD.form.types, box = on => `<b class="k">${on ? "✓" : ""}</b>`, c = a.cert || {};
+  const ck = (on, text, cls) => `<div class="ck${cls ? " " + cls : ""}">${box(on)}<span>${text}</span></div>`;
+  const d = a.details, sp = esc(a.specify);
+  const wp = a.status === "Approved" ? dz(a.withPay) : "", wop = a.status === "Approved" && a.withoutPay ? dz(a.withoutPay) : "";
+  const sg = n => { const s = signer(n); return { name: n ? esc(n) : "", pos: s && s.position ? esc(s.position) : "" }; };
+  const cert = sg(a.certifiedBy), rec = sg(a.recommendedBy), apv = sg(a.approvedBy);
+  const asOf = a.certAsOf || c.asOf;
+  return `<div class="cs6"><div class="top"><i>Civil Service Form No. 6<br>Revised 2020</i>
+      <div class="alloc">Alloc. Leave No. <span class="u" style="min-width:32mm">&nbsp;</span><br>Date Recorded: <span class="u" style="min-width:30mm">&nbsp;</span><br>Recorded by: <span class="u" style="min-width:32mm">&nbsp;</span><br>Revision No. <span class="u" style="min-width:33mm">&nbsp;</span></div></div>
+    <div class="mast"><div class="l"><img src="${SEAL_DOH}" alt=""><img src="${SEAL_TRC}" alt=""></div>
+      <div class="c">Republic of the Philippines<br>Department of Health<br>Treatment and Rehabilitation Center-Dulag<br>Brgy. Highway, Dulag, Leyte 6505</div>
+      <div class="r"><img src="${LOGO_BP}" alt=""></div></div>
+    <h1>APPLICATION FOR LEAVE</h1>
+    <div class="box">
+      <div class="r2" style="grid-template-columns:38% 62%"><div class="cell">1. OFFICE/DEPARTMENT<div class="fill" style="margin-top:1mm">${esc(e.office)}</div></div>
+        <div class="cell">2. NAME :<div style="display:grid;grid-template-columns:1fr 1fr 1fr;margin-top:.5mm"><span>(Last)</span><span>(First)</span><span>(Middle)</span>
+          <span class="fill">${esc(e.last)}</span><span class="fill">${esc(e.first)}</span><span class="fill">${esc(e.middle)}</span></div></div></div>
+      <div class="r2" style="grid-template-columns:38% 62%"><div class="cell">3. DATE OF FILING <span class="u">${esc(longDate(a.filed))}</span></div>
+        <div class="cell">4. POSITION <span class="u" style="min-width:50mm">${esc(e.position)}</span> &nbsp; 5. SALARY <span class="u" style="min-width:24mm">${e.salary ? esc(peso(e.salary)) : "&nbsp;"}</span></div></div>
+      <div class="sh">6. DETAILS OF APPLICATION</div>
+      <div class="two"><div>6.A TYPE OF LEAVE TO BE AVAILED OF
+          ${T.filter(t => t.name !== "Others").map(t => ck(a.type === t.name, esc(t.name) + " (" + esc(t.basis) + ")")).join("")}
+          <div class="sub">Others:</div><div class="uw" style="width:70%">${a.type === "Others" ? esc(a.othersSpecify) : ""}</div></div>
+        <div>6.B DETAILS OF LEAVE
+          <div class="sub">In case of Vacation/Special Privilege Leave:</div>
+          ${ck(d === "Within the Philippines", "Within the Philippines " + (d === "Within the Philippines" && sp ? `<span class="u">${sp}</span>` : ""), "ind")}
+          ${ck(d === "Abroad (Specify)", "Abroad (Specify) <span class=\"u\">" + (d === "Abroad (Specify)" ? sp : "&nbsp;") + "</span>", "ind")}
+          <div class="sub">In case of Sick Leave:</div>
+          ${ck(d === "In Hospital (Specify Illness)", "In Hospital (Specify Illness) <span class=\"u\">" + (d === "In Hospital (Specify Illness)" ? sp : "&nbsp;") + "</span>", "ind")}
+          ${ck(d === "Out Patient (Specify Illness)", "Out Patient (Specify Illness) <span class=\"u\">" + (d === "Out Patient (Specify Illness)" ? sp : "&nbsp;") + "</span>", "ind")}
+          <div class="sub">In case of Special Leave Benefits for Women:</div>
+          <div class="ind">(Specify Illness) <span class="u">${d === "(Specify Illness)" ? sp : "&nbsp;"}</span></div>
+          <div class="sub">In case of Study Leave:</div>
+          ${ck(d === "Completion of Master's Degree", "Completion of Master's Degree", "ind")}${ck(d === "BAR/Board Examination Review", "BAR/Board Examination Review", "ind")}
+          <div class="sub">Other purpose:</div>
+          ${ck(d === "Monetization of Leave Credits", "Monetization of Leave Credits", "ind")}${ck(d === "Terminal Leave", "Terminal Leave", "ind")}</div></div>
+      <div class="two"><div>6.C NUMBER OF WORKING DAYS APPLIED FOR<div class="uw" style="width:50%;margin:1.5mm 0 0 6mm">${a.days ? dz(a.days) : ""}</div>
+          <div style="margin:2mm 0 0 6mm">INCLUSIVE DATES</div><div class="uw" style="width:80%;margin-left:6mm">${esc(a.dates)}</div></div>
+        <div>6.D COMMUTATION${ck(a.commutation !== "Requested", "Not Requested", "ind")}${ck(a.commutation === "Requested", "Requested", "ind")}
+          <div class="sig" style="margin:5mm 4mm 0"><div class="nm">${esc(e.fullName)}</div>(Signature of Applicant)</div></div></div>
+      <div class="sh">7. DETAILS OF ACTION ON APPLICATION</div>
+      <div class="two"><div>7.A CERTIFICATION OF LEAVE CREDITS
+          <div style="text-align:center;margin-top:1mm">As of <span class="u">${esc(longDate(asOf))}</span></div>
+          <table class="cr"><tr><td></td><td>Vacation Leave</td><td>Sick Leave</td></tr>
+            <tr><td>Total Earned</td><td>${n3(c.vl)}</td><td>${n3(c.sl)}</td></tr>
+            <tr><td>Less this application</td><td>${c.lessVl ? n3(c.lessVl) : ""}</td><td>${c.lessSl ? n3(c.lessSl) : ""}</td></tr>
+            <tr><td>Balance</td><td>${n3(c.balVl)}</td><td>${n3(c.balSl)}</td></tr></table>
+          <div class="sig" style="margin:4mm 10mm 0"><div class="nm">${cert.name}</div>${cert.pos || "&nbsp;"}</div>
+          <div style="margin:2mm 0 0 14mm">Date of Receipt: <span class="u" style="min-width:45mm">&nbsp;</span></div></div>
+        <div>7.B RECOMMENDATION${ck(a.recommendation === "For approval", "For approval", "ind")}
+          ${ck(a.recommendation === "For disapproval", "For disapproval due to <span class=\"u\">" + (a.recommendation === "For disapproval" ? esc(a.recReason) : "&nbsp;") + "</span>", "ind")}
+          <div class="uw" style="margin:1mm 0 0 6mm"></div><div class="uw" style="margin:1mm 0 0 6mm"></div>
+          <div class="sig" style="margin:6mm 4mm 0"><div class="nm">${rec.name}</div>${rec.pos ? rec.pos + "<br>" : ""}Signature of Authorized Officer</div></div></div>
+      <div class="two" style="border-bottom:0"><div>7.C APPROVED FOR:
+          <div class="ind" style="margin-top:1mm"><span class="u" style="min-width:12mm;text-align:center">${wp}</span> days with pay<br>
+            <span class="u" style="min-width:12mm;text-align:center">${wop}</span> days without pay<br>
+            <span class="u" style="min-width:12mm;text-align:center">${a.status === "Approved" ? esc(a.othersApproved) : ""}</span> others (Specify)</div></div>
+        <div>7.D DISAPPROVED DUE TO:<div class="uw" style="margin:1mm 0 0 6mm">${a.status === "Disapproved" ? esc(a.disapproved) : ""}</div><div class="uw" style="margin:1mm 0 0 6mm"></div><div class="uw" style="margin:1mm 0 0 6mm"></div></div></div>
+      <div class="chief"><div class="nm">${apv.name || "&nbsp;"}</div><br>${apv.pos || "Chief of Hospital III"}</div>
+    </div>
+    <div class="meta">${esc(a.no)} · from the HRDU System, ${esc(new Date().toLocaleString())}</div></div>`;
+}
+
+// ---------- print the leave card ----------
+$("cPrint").onclick = () => {
+  const e = CARD.employee, y = $("cYear").value, { prev, out } = yearRowsOf(y);
+  const row = r => `<tr><td>${esc(periodOf(r))}</td><td>${esc(r.particulars)}</td><td class="c">${nz(r.vlEarned)}</td><td class="c">${nz(r.vlWP)}</td><td class="c"><b>${n3(r.vlBal)}</b></td><td class="c">${nz(r.vlWOP)}</td>
+    <td class="c">${nz(r.slEarned)}</td><td class="c">${nz(r.slWP)}</td><td class="c"><b>${n3(r.slBal)}</b></td><td class="c">${nz(r.slWOP)}</td><td>${esc(r.action)}</td></tr>`;
+  const cert = firstSigner("Certification of leave credits"), cs = signer(cert);
+  doPrint(`<div class="sheet">${hd}<h3>LEAVE CARD, ${esc(y)}</h3>
+    <table><tr><td class="k">Name</td><td>${esc(e.name)}</td><td class="k">Employee No.</td><td>${esc(e.empNo)}</td></tr>
+      <tr><td class="k">Position</td><td>${esc(e.position)}</td><td class="k">Office / unit</td><td>${esc(e.office)}</td></tr>
+      <tr><td class="k">Status of appointment</td><td>${esc(e.appointment)}</td><td class="k">Date of original appointment</td><td>${esc(longDate(e.appointed))}</td></tr></table>
+    <table><thead><tr><th rowspan="2" style="width:22mm">PERIOD</th><th rowspan="2">PARTICULARS</th><th colspan="4">VACATION LEAVE</th><th colspan="4">SICK LEAVE</th><th rowspan="2" style="width:34mm">DATE AND ACTION TAKEN ON APPLICATION FOR LEAVE</th></tr>
+      <tr><th>EARNED</th><th>ABS. UND. W/P</th><th>BAL.</th><th>ABS. UND. W/O P</th><th>EARNED</th><th>ABS. UND. W/P</th><th>BAL.</th><th>ABS. UND. W/O P</th></tr></thead><tbody>
+      ${prev ? `<tr class="sec"><td>${+y - 1}</td><td>Balance brought forward</td><td></td><td></td><td class="c">${n3(prev.vlBal)}</td><td></td><td></td><td></td><td class="c">${n3(prev.slBal)}</td><td></td><td></td></tr>` : ""}
+      ${out.map(row).join("")}</tbody></table>
+    <p class="lgd">Earned: 1.25 days of VL and 1.25 of SL for each full month of service, less 1/30 for each day without pay (CSC Omnibus Rules on Leave). Tardiness and undertime are charged to VL using the CSC conversion table (1 hour = 0.125 day).</p>
+    ${CARD_SELF ? "" : `<div class="signs"><div>Prepared by:<div class="line">${esc(ME ? ME.name : "")}</div>${esc(ME ? ME.position : "")}</div><div>Certified correct:<div class="line">${esc(cert)}</div>${esc(cs ? cs.position : "")}</div></div>`}
+    <div class="meta">From the HRDU System, ${esc(new Date().toLocaleString())}. Credits earned through ${esc(monthLabel(CARD.through))}.</div></div>`, true, "8.5in 13in");
+};
+
+// ---------- employee sign-in accounts ----------
+let MADE = [];
+function showMade(j, title) {
+  MADE = j.made || [];
+  $("eaH").textContent = title;
+  $("eaBody").innerHTML = (MADE.length ? `<p style="margin-top:0">Give each person their username and temporary password. It is shown only once. They choose their own password at the first sign-in, and see only their own leave card.</p>
+    <div class="tablewrap"><table class="list"><thead><tr><th>Employee</th><th>Username</th><th>Temporary password</th></tr></thead><tbody>
+    ${MADE.map(m => `<tr><td>${esc(m.name)}</td><td><b>${esc(m.username)}</b></td><td><span class="temp">${esc(m.tempPassword)}</span></td></tr>`).join("")}</tbody></table></div>` : `<p>No new accounts. Everyone active already has one.</p>`)
+    + ((j.skipped || []).length ? `<p class="hint">Not made: ${j.skipped.map(esc).join("; ")}</p>` : "");
+  $("eaSlips").classList.toggle("hidden", !MADE.length);
+  msg("eaMsg", ""); $("eaDlg").showModal();
+}
+$("cAcc").onclick = async () => {
+  const e = CARD.employee, has = LV && (LV.employees.find(x => x.empNo === e.empNo) || {}).account;
+  const mode = has ? (confirm(e.name + " has the account " + has + ". Reset the password? A new temporary password is shown once.") ? "reset" : "") : "make";
+  if (!mode) return;
+  let username;
+  if (mode === "make") { username = prompt("Username for " + e.name + " (letters, numbers, dots or dashes):", e.empNo.toLowerCase()); if (username == null) return; }
+  try {
+    const j = await api({ action: "empAccount", empNo: e.empNo, mode, username });
+    if (!j.ok) return alert(j.error);
+    takeLeave(j); showMade(j, mode === "reset" ? "New temporary password" : "Sign-in account made");
+  } catch (err) { alert(errText(err)); }
+};
+$("lvAccAll").onclick = async () => {
+  if (!confirm("Make a sign-in account for every active employee who has none? Usernames are the employee numbers. The temporary passwords are shown once, so print the slips right away.")) return;
+  try { const j = await api({ action: "empAccount", mode: "all" }); if (!j.ok) return alert(j.error); takeLeave(j); showMade(j, "Sign-in accounts made"); }
+  catch (err) { alert(errText(err)); }
+};
+$("eaSlips").onclick = () => {
+  const link = PUBLIC_URL;
+  doPrint(`<div class="slips">${MADE.map(m => `<div class="slip"><b>HRDU System, DOH TRC Dulag</b><br>${esc(m.name)}<br><br>Open ${esc(link)}<br>Username: <b class="t">${esc(m.username)}</b><br>Temporary password: <b class="t">${esc(m.tempPassword)}</b><br><br>
+    <span style="font-size:8.5pt">Choose your own password at the first sign-in. You will see your own leave card and can apply for leave. Keep this slip private.</span></div>`).join("")}</div>`, false);
+};
+
+// ---------- forced leave at year end ----------
+let FD = null;
+$("lvForced").onclick = () => {
+  const y = +D.today.slice(0, 4);
+  $("fdYear").innerHTML = [y, y - 1].map(x => `<option>${x}</option>`).join(""); $("fdYear").value = D.today.slice(5, 7) === "01" ? y - 1 : y;
+  msg("fdMsg", ""); $("fdDlg").showModal(); loadForced();
+};
+$("fdYear").oninput = loadForced;
+async function loadForced() {
+  $("fdBody").innerHTML = `<tr><td colspan="6" class="empty">Loading…</td></tr>`;
+  try {
+    const j = await api({ action: "forcedPreview", year: $("fdYear").value });
+    if (!j.ok) { $("fdBody").innerHTML = `<tr><td colspan="6" class="empty">${esc(j.error)}</td></tr>`; return; }
+    FD = j; renderForced();
+  } catch (e) { $("fdBody").innerHTML = `<tr><td colspan="6" class="empty">${esc(errText(e))}</td></tr>`; }
+}
+function renderForced() {
+  const rows = FD.rows.filter(x => x.need || x.posted != null);
+  $("fdBody").innerHTML = rows.map(x => `<tr><td class="need3">${x.forfeit ? `<input type="checkbox" checked data-e="${esc(x.empNo)}" aria-label="Charge ${esc(x.name)}" style="width:20px;min-height:0;margin:0">` : ""}</td>
+    <td><b>${esc(x.name)}</b><div class="s">${esc(x.empNo)}</div></td><td class="n">${n3(x.maxVl)}</td><td class="n">${dz(x.taken)}</td><td class="n">${x.forfeit ? "<b>" + n3(x.forfeit) + "</b>" : ""}</td>
+    <td>${x.posted != null ? `<span class="chip ok">${n3(x.posted)} deducted</span>` : x.forfeit ? "" : `<span class="s">Took 5 days</span>`}</td></tr>`).join("")
+    || `<tr><td colspan="6" class="empty">No one had 10 or more days of VL in ${esc(FD.year)}.</td></tr>`;
+}
+$("fdPost").onclick = async () => {
+  const skip = [...$("fdBody").querySelectorAll("input[data-e]:not(:checked)")].map(x => x.dataset.e);
+  if (!confirm("Deduct the forced leave not taken in " + FD.year + " from VL, dated December 31, " + FD.year + "?")) return;
+  msg("fdMsg", "Posting…");
+  try {
+    const j = await api({ action: "postForced", year: FD.year, skip, reason: $("fdWhy").value });
+    if (!j.ok) { msg("fdMsg", j.error, "err"); return; }
+    FD = j; renderForced(); msg("fdMsg", units(j.posted.length, ["leave card", "leave cards"]) + " charged.", "ok"); loadLeave();
+  } catch (e) { msg("fdMsg", errText(e), "err"); }
+};
+
+// ---------- signatories (Administrator) ----------
+let SIGNS = [];
+async function loadSigners() {
+  try { const j = await api({ action: "leaveLoad" }); if (j.ok) { LV = j; SIGNS = j.signers; renderSigners(); } } catch (e) {}
+}
+function renderSigners() {
+  $("sgBody").innerHTML = SIGNS.map(s => `<tr data-s="${esc(s.name)}"><td><b>${esc(s.name)}</b></td><td>${esc(s.position)}</td><td class="s">${s.signsFor.map(esc).join(", ")}</td>
+    <td>${s.status === "Active" ? `<span class="chip ok">Active</span>` : `<span class="chip mute">Inactive</span>`}</td></tr>`).join("") || `<tr><td colspan="4" class="empty">No signatories yet. Add who certifies the leave credits, who recommends, and who approves.</td></tr>`;
+  $("sgBody").querySelectorAll("tr[data-s]").forEach(tr => tr.onclick = () => openSigner(SIGNS.find(s => s.name === tr.dataset.s)));
+}
+function openSigner(s) {
+  const isNew = !s; s = s || { name: "", position: "", signsFor: [], status: "Active" };
+  $("sgH").textContent = isNew ? "Add a signatory" : s.name;
+  $("sgName").value = s.name; $("sgPos").value = s.position; $("sgSt").value = s.status;
+  $("sgFor").innerHTML = ["Certification of leave credits", "Recommendation", "Approval"].map(x => `<label><input type="checkbox" value="${x}"${s.signsFor.includes(x) ? " checked" : ""}>${{ "Certification of leave credits": "7.A Certification of leave credits", "Recommendation": "7.B Recommendation", "Approval": "7.C / 7.D Approval" }[x]}</label>`).join("");
+  $("sgForm").dataset.original = isNew ? "" : s.name; msg("sgMsg", "");
+  $("sgDlg").showModal(); $("sgName").focus();
+}
+$("sgAdd").onclick = () => openSigner(null);
+$("sgForm").onsubmit = async ev => {
+  ev.preventDefault();
+  const signer = { original: $("sgForm").dataset.original, name: $("sgName").value, position: $("sgPos").value, status: $("sgSt").value,
+    signsFor: [...$("sgFor").querySelectorAll("input:checked")].map(x => x.value) };
+  $("sgSave").disabled = true; msg("sgMsg", "Saving…");
+  try {
+    const j = await api({ action: "saveSigner", signer });
+    if (!j.ok) { msg("sgMsg", j.error, "err"); return; }
+    SIGNS = j.signers; if (LV) LV.signers = j.signers; renderSigners(); $("sgDlg").close();
+  } catch (err) { msg("sgMsg", errText(err), "err"); }
+  finally { $("sgSave").disabled = false; }
 };
 
 window.addEventListener("hashchange", () => { if (/t=/.test(location.hash)) route(); });
